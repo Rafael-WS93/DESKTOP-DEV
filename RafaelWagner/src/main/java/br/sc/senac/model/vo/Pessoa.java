@@ -1,8 +1,8 @@
-package br.sc.senac.model;
+package br.sc.senac.model.vo;
 
 import java.time.LocalDate;
 
-public abstract class Pessoa {
+public class Pessoa {
 	
 	private String nome;
 	private String cpf;

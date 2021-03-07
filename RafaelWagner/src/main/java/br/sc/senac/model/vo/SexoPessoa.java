@@ -1,4 +1,4 @@
-package br.sc.senac.model;
+package br.sc.senac.model.vo;
 
 public enum SexoPessoa {
 	Feminino, Masculino
