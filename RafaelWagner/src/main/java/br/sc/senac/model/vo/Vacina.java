@@ -4,18 +4,20 @@ import java.time.LocalDate;
 
 public class Vacina {
 	
+	private int idVacina;
 	private String nome;
 	private String pesquisadorResponsavel;
 	private LocalDate dataInicioPesquisa;
 	private EstagioVacina estagioVacina;
 	
-	public Vacina(String nome, String pesquisadorResponsavel, LocalDate dataInicioPesquisa,
+	public Vacina(int idVacina, String nome, String pesquisadorResponsavel, LocalDate dataInicioPesquisa,
 			EstagioVacina estagioVacina) {
 		super();
 		this.nome = nome;
 		this.pesquisadorResponsavel = pesquisadorResponsavel;
 		this.dataInicioPesquisa = dataInicioPesquisa;
 		this.estagioVacina = estagioVacina;
+		this.idVacina = idVacina;
 	}
 
 	public Vacina() {
@@ -53,12 +55,15 @@ public class Vacina {
 	public void setEstagioVacina(EstagioVacina estagioVacina) {
 		this.estagioVacina = estagioVacina;
 	}
-	
-	
 
-	
-	
-	
+	public int getIdVacina() {
+		return idVacina;
+	}
+
+	public void setIdVacina(int idVacina) {
+		this.idVacina = idVacina;
+	}
+
 
 	
 }

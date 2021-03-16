@@ -1,16 +1,19 @@
 package br.sc.senac.model.vo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Pessoa {
 	
+	private int idPessoa;
 	private String nome;
 	private String cpf;
 	private LocalDate dataNascimento;
 	private SexoPessoa sexo;
 	private CategoriaPessoa categoria;
+	private List<AplicacaoVacina> aplicacoes;
 	
-	public Pessoa(String nome, String cpf, LocalDate dataNascimento, SexoPessoa sexo, CategoriaPessoa categoria) {
+	public Pessoa(List<AplicacaoVacina> aplicacoes, int idPessoa, String nome, String cpf, LocalDate dataNascimento, SexoPessoa sexo, CategoriaPessoa categoria) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
@@ -18,6 +21,8 @@ public class Pessoa {
 		this.sexo = sexo;
 		
 		this.categoria = categoria;
+		this.setIdPessoa(idPessoa);
+		this.setAplicacoes(aplicacoes);
 	}
 
 	public Pessoa() {
@@ -62,6 +67,22 @@ public class Pessoa {
 
 	public void setCategoria(CategoriaPessoa categoria) {
 		this.categoria = categoria;
+	}
+
+	public int getIdPessoa() {
+		return idPessoa;
+	}
+
+	public void setIdPessoa(int idPessoa) {
+		this.idPessoa = idPessoa;
+	}
+
+	public List<AplicacaoVacina> getAplicacoes() {
+		return aplicacoes;
+	}
+
+	public void setAplicacoes(List<AplicacaoVacina> aplicacoes) {
+		this.aplicacoes = aplicacoes;
 	}
 	
 
