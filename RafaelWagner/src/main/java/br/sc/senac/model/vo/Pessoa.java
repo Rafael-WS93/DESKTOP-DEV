@@ -11,9 +11,8 @@ public class Pessoa {
 	private LocalDate dataNascimento;
 	private SexoPessoa sexo;
 	private CategoriaPessoa categoria;
-	private List<AplicacaoVacina> aplicacoes;
 	
-	public Pessoa(List<AplicacaoVacina> aplicacoes, int idPessoa, String nome, String cpf, LocalDate dataNascimento, SexoPessoa sexo, CategoriaPessoa categoria) {
+	public Pessoa(int idPessoa, String nome, String cpf, LocalDate dataNascimento, SexoPessoa sexo, CategoriaPessoa categoria) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
@@ -22,7 +21,6 @@ public class Pessoa {
 		
 		this.categoria = categoria;
 		this.setIdPessoa(idPessoa);
-		this.setAplicacoes(aplicacoes);
 	}
 
 	public Pessoa() {
@@ -77,13 +75,6 @@ public class Pessoa {
 		this.idPessoa = idPessoa;
 	}
 
-	public List<AplicacaoVacina> getAplicacoes() {
-		return aplicacoes;
-	}
-
-	public void setAplicacoes(List<AplicacaoVacina> aplicacoes) {
-		this.aplicacoes = aplicacoes;
-	}
 	
 
 }

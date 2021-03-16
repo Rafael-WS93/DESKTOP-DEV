@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class AplicacaoVacina {
 	
+	private Pessoa pessoa;
 	private Vacina vacina;
 	private LocalDate dataAplicação;
 	private int idAplicacao;
@@ -12,11 +13,12 @@ public class AplicacaoVacina {
 		super();
 	}
 
-	public AplicacaoVacina(Vacina vacina, LocalDate dataAplicação, int idAplicacao) {
+	public AplicacaoVacina( Pessoa pessoa, Vacina vacina, LocalDate dataAplicação, int idAplicacao) {
 		super();
 		this.vacina = vacina;
 		this.dataAplicação = dataAplicação;
 		this.idAplicacao = idAplicacao;
+		this.setPessoa(pessoa);
 	}
 
 	public Vacina getVacina() {
@@ -41,6 +43,14 @@ public class AplicacaoVacina {
 
 	public void setIdAplicacao(int idAplicacao) {
 		this.idAplicacao = idAplicacao;
+	}
+
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
 	}
 	
 	

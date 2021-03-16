@@ -1,6 +1,5 @@
 package br.sc.senac.model.DAO;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,24 +8,26 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.sc.senac.model.vo.EstagioVacina;
-import br.sc.senac.model.vo.Vacina;
+import br.sc.senac.model.vo.Pessoa;
+import br.sc.senac.model.vo.SexoPessoa;
 
-public class VacinaDAO {
+
+public class PessoaDAO {
 	
-	public int cadastrarVacina (Vacina vacina){
+	public int cadastrarPessoa(Pessoa pessoa) {
+		
 		int resultadoInt = 0;
 		
-		String sql = "INSERT INTO VACINA(nome ,PESQUISADOR ,inicio_pesquisa ,estagio) values (?,?,?,?);";
+		String sql = "INSERT INTO Pessoa(nome ,cpf ,nascimento ,sexo) values (?,?,?,?);";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
-			stmt.setString(1 , vacina.getNome());
-			stmt.setString(2 , vacina.getPesquisadorResponsavel());
-			stmt.setString(3 , vacina.getDataInicioPesquisa().toString());
-			stmt.setString(4 , vacina.getEstagioVacina().name());
+			stmt.setString(1 , pessoa.getNome());
+			stmt.setString(2 , pessoa.getCpf());
+			stmt.setString(3 , pessoa.getDataNascimento().toString());
+			stmt.setString(4 , pessoa.getSexo().name());
 			
 			resultadoInt = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -45,24 +46,26 @@ public class VacinaDAO {
 		
 		
 		return resultadoInt;
+		
 	}
 	
-	public boolean atualizarVacina(Vacina vacina) {
+	public boolean atualizarVacina(Pessoa pessoa) {
+		
 		boolean resultadoBool = false;
 		
-		String sql = "UPDATE VACINA SET nome= ? ,pesquisador= ? ,inicio_pesquisa= ? ,estagio= ? where idvacina = ?;";
+		String sql = "UPDATE PESSOA SET nome= ? ,cpf= ? ,nascimento= ? ,sexo= ? where idpessoa = ?;";
 		
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
-			stmt.setString(1 , vacina.getNome());
-			stmt.setString(2 , vacina.getPesquisadorResponsavel());
-			stmt.setString(3 , vacina.getDataInicioPesquisa().toString());
-			stmt.setString(4 , vacina.getEstagioVacina().name());
+			stmt.setString(1 , pessoa.getNome());
+			stmt.setString(2 , pessoa.getCpf());
+			stmt.setString(3 , pessoa.getDataNascimento().toString());
+			stmt.setString(4 , pessoa.getSexo().name());
 			
-			stmt.setString(5, String.valueOf(vacina.getIdVacina()));
+			stmt.setString(5, String.valueOf(pessoa.getIdPessoa()));
 			
 			stmt.executeUpdate();
 			
@@ -81,14 +84,17 @@ public class VacinaDAO {
 		}
 		
 		return resultadoBool;
+		
+		
+		
 	}
 	
-	public Vacina consultaVacinaPorId(Integer id) {
+	public Pessoa consultarPessoaPorId(Integer id) {
 		
-		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA WHERE IDVACINA= ? ;";
+		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA WHERE IDPESSOA= ? ;";
 		
 	
-		Vacina vacina = new Vacina();
+		Pessoa pessoa = new Pessoa();
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 			
@@ -102,11 +108,11 @@ public class VacinaDAO {
 			
 			if(rs.next()) {
 				
-				vacina.setIdVacina(rs.getInt(1));
-				vacina.setNome(rs.getString(2));
-				vacina.setPesquisadorResponsavel(rs.getString(3));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString(4)));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString(5)));
+				pessoa.setIdPessoa(rs.getInt(1));
+				pessoa.setNome(rs.getString(2));
+				pessoa.setCpf(rs.getString(3));
+				pessoa.setDataNascimento(LocalDate.parse(rs.getString(4)));
+				pessoa.setSexo(SexoPessoa.valueOf(rs.getString(5)));
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
@@ -125,32 +131,32 @@ public class VacinaDAO {
 			
 		}
 		
-		return vacina;
+		return pessoa;
 
 
 	}
 	
-	public List<Vacina> consultarTodasVacinas() {
+public List<Pessoa> consultarTodasPessoas() {
 		
-		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA;";
+		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA;";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		ResultSet rs = null;
 		
-		List<Vacina> listaVacinas = new ArrayList<Vacina>();
+		List<Pessoa> listaPessoas = new ArrayList<Pessoa>();
 		try {	
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				Vacina vacina = new Vacina();
-				vacina.setIdVacina(rs.getInt(1));
-				vacina.setNome(rs.getString(2));
-				vacina.setPesquisadorResponsavel(rs.getString(3));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString(4)));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString(5)));
+				Pessoa pessoa = new Pessoa();
+				pessoa.setIdPessoa(rs.getInt(1));
+				pessoa.setNome(rs.getString(2));
+				pessoa.setCpf(rs.getString(3));
+				pessoa.setDataNascimento(LocalDate.parse(rs.getString(4)));
+				pessoa.setSexo(SexoPessoa.valueOf(rs.getString(5)));
 				
-				listaVacinas.add(vacina);
+				listaPessoas.add(pessoa);
 			}
 			
 			
@@ -158,15 +164,15 @@ public class VacinaDAO {
 			e.printStackTrace();
 		}
 		
-		return listaVacinas;
+		return listaPessoas;
 		
 		
 	}
 	
-	public int excluirVacina(int id) {
+	public int excluirPessoa(int id) {
 		int resultadoInt = 0;
 		
-		String sql = "DELETE FROM VACINA WHERE IDVACINA= ?;";
+		String sql = "DELETE FROM PESSOA WHERE IDPESSOA= ?;";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -191,6 +197,10 @@ public class VacinaDAO {
 		
 		return resultadoInt;
 	}
-
+	
+	
+	
+	
+	
 
 }
