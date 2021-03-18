@@ -1,31 +1,53 @@
 package br.sc.senac.model.vo;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class AvaliacaoAplicacao {
 	
+	private int idAvaliacaoAplicacao;
 	private AplicacaoVacina aplicacao;
 	private String descricao;
 	private int nota;
+	private LocalDate dataAvaliacao;
 	
 	public AvaliacaoAplicacao() {
 		super();
 	}
 
-	public AvaliacaoAplicacao(AplicacaoVacina aplicacao, String descricao, int nota) {
+
+	public AvaliacaoAplicacao(int idAvaliacaoAplicacao, AplicacaoVacina aplicacao, String descricao, int nota,
+			LocalDate dataAvaliacao) {
 		super();
+		this.idAvaliacaoAplicacao = idAvaliacaoAplicacao;
 		this.aplicacao = aplicacao;
 		this.descricao = descricao;
-		if(nota > 5 || nota < 1) {
-			System.out.println("Nota informada invalida. A nota pode ser atribuida de 1 a 5");	}
-		else this.nota = nota;
+		this.nota = nota;
+		this.dataAvaliacao = dataAvaliacao;
 	}
 
-	public AplicacaoVacina getAplicacao() {
-		return aplicacao;
+
+
+	public LocalDate getDataAvaliacao() {
+		return dataAvaliacao;
 	}
 
-	public void setAplicacao(AplicacaoVacina aplicacao) {
-		this.aplicacao = aplicacao;
+
+	public void setDataAvaliacao(LocalDate localDate) {
+		this.dataAvaliacao = localDate;
 	}
+
+
+	public int getIdAvaliacaoAplicacao() {
+		return idAvaliacaoAplicacao;
+	}
+
+
+
+	public void setIdAvaliacaoAplicacao(int idAvaliacaoAplicacao) {
+		this.idAvaliacaoAplicacao = idAvaliacaoAplicacao;
+	}
+
 
 	public String getDescricao() {
 		return descricao;
@@ -40,13 +62,21 @@ public class AvaliacaoAplicacao {
 	}
 
 	public void setNota(int nota) {
-		if(nota > 5 || nota < 1) {
-			System.out.println("Nota informada invalida. A nota pode ser atribuida de 1 a 5");	}
-		else this.nota = nota;
+		this.nota = nota;
 	}
 
 
-	
-	
+
+	public AplicacaoVacina getAplicacao() {
+		return aplicacao;
+	}
+
+
+
+	public void setAplicacao(AplicacaoVacina aplicacao) {
+		this.aplicacao = aplicacao;
+	}
+
+
 
 }
