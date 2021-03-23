@@ -14,7 +14,7 @@ import br.sc.senac.model.vo.SexoPessoa;
 
 public class PessoaDAO {
 	
-	public int cadastrarPessoa(Pessoa pessoa) {
+	public int cadastrarPessoaDAO(Pessoa pessoa) {
 		
 		int resultadoInt = 0;
 		
@@ -49,9 +49,9 @@ public class PessoaDAO {
 		
 	}
 	
-	public boolean atualizarVacina(Pessoa pessoa) {
+	public int atualizarVacinaDAO(Pessoa pessoa) {
 		
-		boolean resultadoBool = false;
+		int resultadoInt = 0;
 		
 		String sql = "UPDATE PESSOA SET nome= ? ,cpf= ? ,nascimento= ? ,sexo= ? where idpessoa = ?;";
 		
@@ -67,9 +67,8 @@ public class PessoaDAO {
 			
 			stmt.setString(5, String.valueOf(pessoa.getIdPessoa()));
 			
-			stmt.executeUpdate();
-			
-			resultadoBool = true; 
+			resultadoInt = stmt.executeUpdate();
+			 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -83,13 +82,13 @@ public class PessoaDAO {
 			
 		}
 		
-		return resultadoBool;
+		return resultadoInt;
 		
 		
 		
 	}
 	
-	public Pessoa consultarPessoaPorId(Integer id) {
+	public Pessoa consultarPessoaPorIdDAO(Integer id) {
 		
 		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA WHERE IDPESSOA= ? ;";
 		
@@ -108,11 +107,11 @@ public class PessoaDAO {
 			
 			if(rs.next()) {
 				
-				pessoa.setIdPessoa(rs.getInt(1));
-				pessoa.setNome(rs.getString(2));
-				pessoa.setCpf(rs.getString(3));
-				pessoa.setDataNascimento(LocalDate.parse(rs.getString(4)));
-				pessoa.setSexo(SexoPessoa.valueOf(rs.getString(5)));
+				pessoa.setIdPessoa(rs.getInt("idpessoa"));
+				pessoa.setNome(rs.getString("nome"));
+				pessoa.setCpf(rs.getString("cpf"));
+				pessoa.setDataNascimento(LocalDate.parse(rs.getString("nascimento")));
+				pessoa.setSexo(SexoPessoa.valueOf(rs.getString("sexo")));
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
@@ -136,7 +135,7 @@ public class PessoaDAO {
 
 	}
 	
-public List<Pessoa> consultarTodasPessoas() {
+public List<Pessoa> consultarTodasPessoasDAO() {
 		
 		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA;";
 		
@@ -150,11 +149,11 @@ public List<Pessoa> consultarTodasPessoas() {
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
 				Pessoa pessoa = new Pessoa();
-				pessoa.setIdPessoa(rs.getInt(1));
-				pessoa.setNome(rs.getString(2));
-				pessoa.setCpf(rs.getString(3));
-				pessoa.setDataNascimento(LocalDate.parse(rs.getString(4)));
-				pessoa.setSexo(SexoPessoa.valueOf(rs.getString(5)));
+				pessoa.setIdPessoa(rs.getInt("idpessoa"));
+				pessoa.setNome(rs.getString("nome"));
+				pessoa.setCpf(rs.getString("cpf"));
+				pessoa.setDataNascimento(LocalDate.parse(rs.getString("nascimento")));
+				pessoa.setSexo(SexoPessoa.valueOf(rs.getString("sexo")));
 				
 				listaPessoas.add(pessoa);
 			}
@@ -169,7 +168,7 @@ public List<Pessoa> consultarTodasPessoas() {
 		
 	}
 	
-	public int excluirPessoa(int id) {
+	public int excluirPessoaDAO(int id) {
 		int resultadoInt = 0;
 		
 		String sql = "DELETE FROM PESSOA WHERE IDPESSOA= ?;";
@@ -196,6 +195,42 @@ public List<Pessoa> consultarTodasPessoas() {
 		}
 		
 		return resultadoInt;
+	}
+
+	public boolean verificarPessoaPorCpfDAO(String cpf) {
+		boolean resultadoBool = true;
+		
+		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA WHERE cpf= ? ;";
+		
+		
+		Pessoa pessoa = new Pessoa();
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+			
+		ResultSet rs = null;
+		try {
+			
+			
+			stmt.setString(1, cpf);
+			
+			rs = stmt.executeQuery();
+			
+			resultadoBool = rs.next();
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return resultadoBool;
 	}
 	
 	

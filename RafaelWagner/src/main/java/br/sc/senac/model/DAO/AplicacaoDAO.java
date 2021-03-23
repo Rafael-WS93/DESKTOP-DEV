@@ -105,13 +105,13 @@ public int cadastrarAplicacaoVacina(AplicacaoVacina aplicacao) {
 			
 			if(rs.next()) {
 				
-				aplicacao.setIdAplicacao(rs.getInt(1));
+				aplicacao.setIdAplicacao(rs.getInt("idaplicacao"));
 
-				aplicacao.setIdPessoa(rs.getInt(2));
+				aplicacao.setIdPessoa(rs.getInt("idpessoa"));
 
-				aplicacao.setIdVacina(rs.getInt(3));
+				aplicacao.setIdVacina(rs.getInt("idvacina"));
 				
-				aplicacao.setDataAplicação(LocalDate.parse(rs.getString(4)));
+				aplicacao.setDataAplicação(LocalDate.parse(rs.getString("dt_aplicacao")));
 
 				
 			} else {
@@ -152,13 +152,13 @@ public List<AplicacaoVacina> consultarTodasAplicacacoes() {
 				
 				AplicacaoVacina aplicacao = new AplicacaoVacina();
 				
-				aplicacao.setIdAplicacao(rs.getInt(1));
+				aplicacao.setIdAplicacao(rs.getInt("idaplicacao"));
 
-				aplicacao.setIdPessoa(rs.getInt(2));
+				aplicacao.setIdPessoa(rs.getInt("idpessoa"));
 
-				aplicacao.setIdVacina(rs.getInt(3));
+				aplicacao.setIdVacina(rs.getInt("idvacina"));
 				
-				aplicacao.setDataAplicação(LocalDate.parse(rs.getString(4)));
+				aplicacao.setDataAplicação(LocalDate.parse(rs.getString("dt_aplicacao")));
 				
 				listaAplicacaoVacinas.add(aplicacao);
 			}

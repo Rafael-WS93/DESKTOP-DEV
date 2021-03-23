@@ -14,7 +14,7 @@ import br.sc.senac.model.vo.Vacina;
 
 public class VacinaDAO {
 	
-	public int cadastrarVacina (Vacina vacina){
+	public int cadastrarVacinaDAO (Vacina vacina){
 		int resultadoInt = 0;
 		
 		String sql = "INSERT INTO VACINA(nome ,PESQUISADOR ,inicio_pesquisa ,estagio) values (?,?,?,?);";
@@ -47,14 +47,15 @@ public class VacinaDAO {
 		return resultadoInt;
 	}
 	
-	public boolean atualizarVacina(Vacina vacina) {
-		boolean resultadoBool = false;
+	public int atualizarVacinaDAO(Vacina vacina) {
+		int resultadoInt = 0;
 		
 		String sql = "UPDATE VACINA SET nome= ? ,pesquisador= ? ,inicio_pesquisa= ? ,estagio= ? where idvacina = ?;";
 		
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		
 		
 		try {
 			stmt.setString(1 , vacina.getNome());
@@ -64,9 +65,8 @@ public class VacinaDAO {
 			
 			stmt.setString(5, String.valueOf(vacina.getIdVacina()));
 			
-			stmt.executeUpdate();
-			
-			resultadoBool = true; 
+			resultadoInt = stmt.executeUpdate();
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -80,10 +80,10 @@ public class VacinaDAO {
 			
 		}
 		
-		return resultadoBool;
+		return resultadoInt;
 	}
 	
-	public Vacina consultaVacinaPorId(Integer id) {
+	public Vacina consultaVacinaPorIdDAO(Integer id) {
 		
 		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA WHERE IDVACINA= ? ;";
 		
@@ -102,11 +102,11 @@ public class VacinaDAO {
 			
 			if(rs.next()) {
 				
-				vacina.setIdVacina(rs.getInt(1));
-				vacina.setNome(rs.getString(2));
-				vacina.setPesquisadorResponsavel(rs.getString(3));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString(4)));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString(5)));
+				vacina.setIdVacina(rs.getInt("idvacina"));
+				vacina.setNome(rs.getString("nome"));
+				vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
+				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
+				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
@@ -130,7 +130,7 @@ public class VacinaDAO {
 
 	}
 	
-	public List<Vacina> consultarTodasVacinas() {
+	public List<Vacina> consultarTodasVacinasDAO() {
 		
 		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA;";
 		
@@ -144,11 +144,11 @@ public class VacinaDAO {
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
 				Vacina vacina = new Vacina();
-				vacina.setIdVacina(rs.getInt(1));
-				vacina.setNome(rs.getString(2));
-				vacina.setPesquisadorResponsavel(rs.getString(3));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString(4)));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString(5)));
+				vacina.setIdVacina(rs.getInt("idvacina"));
+				vacina.setNome(rs.getString("nome"));
+				vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
+				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
+				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
 				
 				listaVacinas.add(vacina);
 			}
@@ -163,7 +163,7 @@ public class VacinaDAO {
 		
 	}
 	
-	public int excluirVacina(int id) {
+	public int excluirVacinaDAO(int id) {
 		int resultadoInt = 0;
 		
 		String sql = "DELETE FROM VACINA WHERE IDVACINA= ?;";
@@ -190,6 +190,51 @@ public class VacinaDAO {
 		}
 		
 		return resultadoInt;
+	}
+
+	public Vacina ConsultarVacinaPorNomeDAO(String nome) {
+		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA WHERE nome= ? ;";
+		
+		
+		Vacina vacina = new Vacina();
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+			
+		ResultSet rs = null;
+		try {
+			
+			
+			stmt.setString(1, nome);
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				vacina.setIdVacina(rs.getInt("idvacina"));
+				vacina.setNome(rs.getString("nome"));
+				vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
+				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
+				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
+				
+			} else {
+				System.out.println("Ocorrencia não existe");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return vacina;
+
 	}
 
 

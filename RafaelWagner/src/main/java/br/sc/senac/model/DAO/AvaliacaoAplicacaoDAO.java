@@ -117,13 +117,13 @@ public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
 				
 				AplicacaoDAO aplicacaoVacinaDAO = new AplicacaoDAO();
 				
-				avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt(2) ) );
+				avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt("idAVALIACAO_APLICACAO") ) );
 				
-				avaliacaoAplicacao.setNota(rs.getInt(3));
+				avaliacaoAplicacao.setNota(rs.getInt("nota"));
 
-				avaliacaoAplicacao.setDescricao(rs.getString(4));
+				avaliacaoAplicacao.setDescricao(rs.getString("descricao"));
 				
-				avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString(5)));
+				avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString("dt_avaliacao")));
 
 
 				
@@ -166,13 +166,13 @@ public List<AvaliacaoAplicacao> consultarTodasAvaliacoes() {
 				AvaliacaoAplicacao avaliacaoAplicacao = new AvaliacaoAplicacao();
 				
 				AplicacaoDAO aplicacaoVacinaDAO = new AplicacaoDAO();
-				avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt(2) ) );
+				avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt("idAVALIACAO_APLICACAO") ) );
 				
-				avaliacaoAplicacao.setNota(rs.getInt(3));
+				avaliacaoAplicacao.setNota(rs.getInt("nota"));
 
-				avaliacaoAplicacao.setDescricao(rs.getString(4));
+				avaliacaoAplicacao.setDescricao(rs.getString("descricao"));
 				
-				avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString(5)));
+				avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString("dt_avaliacao")));
 
 
 				
