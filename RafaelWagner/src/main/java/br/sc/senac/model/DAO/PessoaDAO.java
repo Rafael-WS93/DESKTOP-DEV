@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.sc.senac.model.vo.AplicacaoVacina;
 import br.sc.senac.model.vo.Pessoa;
 import br.sc.senac.model.vo.SexoPessoa;
 
@@ -24,10 +25,8 @@ public class PessoaDAO {
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
-			stmt.setString(1 , pessoa.getNome());
-			stmt.setString(2 , pessoa.getCpf());
-			stmt.setString(3 , pessoa.getDataNascimento().toString());
-			stmt.setString(4 , pessoa.getSexo().name());
+			
+			stmt = this.prepararStatementCadastro(stmt, pessoa);
 			
 			resultadoInt = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -60,10 +59,8 @@ public class PessoaDAO {
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
-			stmt.setString(1 , pessoa.getNome());
-			stmt.setString(2 , pessoa.getCpf());
-			stmt.setString(3 , pessoa.getDataNascimento().toString());
-			stmt.setString(4 , pessoa.getSexo().name());
+			
+			stmt = this.prepararStatementCadastro(stmt, pessoa);
 			
 			stmt.setString(5, String.valueOf(pessoa.getIdPessoa()));
 			
@@ -107,11 +104,7 @@ public class PessoaDAO {
 			
 			if(rs.next()) {
 				
-				pessoa.setIdPessoa(rs.getInt("idpessoa"));
-				pessoa.setNome(rs.getString("nome"));
-				pessoa.setCpf(rs.getString("cpf"));
-				pessoa.setDataNascimento(LocalDate.parse(rs.getString("nascimento")));
-				pessoa.setSexo(SexoPessoa.valueOf(rs.getString("sexo")));
+				pessoa = this.converterRS(rs);
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
@@ -148,14 +141,8 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 		try {	
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				Pessoa pessoa = new Pessoa();
-				pessoa.setIdPessoa(rs.getInt("idpessoa"));
-				pessoa.setNome(rs.getString("nome"));
-				pessoa.setCpf(rs.getString("cpf"));
-				pessoa.setDataNascimento(LocalDate.parse(rs.getString("nascimento")));
-				pessoa.setSexo(SexoPessoa.valueOf(rs.getString("sexo")));
 				
-				listaPessoas.add(pessoa);
+				listaPessoas.add(this.converterRS(rs));
 			}
 			
 			
@@ -203,7 +190,6 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA WHERE cpf= ? ;";
 		
 		
-		Pessoa pessoa = new Pessoa();
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 			
@@ -231,6 +217,31 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 		}
 		
 		return resultadoBool;
+	}
+	
+	private PreparedStatement prepararStatementCadastro(PreparedStatement stmt, Pessoa pessoa) throws SQLException {
+		
+		stmt.setString(1 , pessoa.getNome());
+		stmt.setString(2 , pessoa.getCpf());
+		stmt.setString(3 , pessoa.getDataNascimento().toString());
+		stmt.setString(4 , pessoa.getSexo().name());
+		
+		AplicacaoDAO aplicacaoDAO = new AplicacaoDAO();
+		pessoa.setVacinacoes(aplicacaoDAO.consultarTodasAplicacacoesPorPessoa(pessoa.getIdPessoa()));
+		
+		return stmt;
+		
+	}
+	
+	private Pessoa converterRS(ResultSet rs) throws SQLException {
+		Pessoa pessoa = new Pessoa();
+		pessoa.setIdPessoa(rs.getInt("idpessoa"));
+		pessoa.setNome(rs.getString("nome"));
+		pessoa.setCpf(rs.getString("cpf"));
+		pessoa.setDataNascimento(LocalDate.parse(rs.getString("nascimento")));
+		pessoa.setSexo(SexoPessoa.valueOf(rs.getString("sexo")));
+		
+		return pessoa;
 	}
 	
 	

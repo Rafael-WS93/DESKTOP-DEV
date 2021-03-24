@@ -23,10 +23,8 @@ public class VacinaDAO {
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
-			stmt.setString(1 , vacina.getNome());
-			stmt.setString(2 , vacina.getPesquisadorResponsavel());
-			stmt.setString(3 , vacina.getDataInicioPesquisa().toString());
-			stmt.setString(4 , vacina.getEstagioVacina().name());
+			
+			stmt = this.prepararStatementCadastro(stmt, vacina);
 			
 			resultadoInt = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -58,10 +56,8 @@ public class VacinaDAO {
 		
 		
 		try {
-			stmt.setString(1 , vacina.getNome());
-			stmt.setString(2 , vacina.getPesquisadorResponsavel());
-			stmt.setString(3 , vacina.getDataInicioPesquisa().toString());
-			stmt.setString(4 , vacina.getEstagioVacina().name());
+			
+			stmt = this.prepararStatementCadastro(stmt, vacina);
 			
 			stmt.setString(5, String.valueOf(vacina.getIdVacina()));
 			
@@ -102,11 +98,7 @@ public class VacinaDAO {
 			
 			if(rs.next()) {
 				
-				vacina.setIdVacina(rs.getInt("idvacina"));
-				vacina.setNome(rs.getString("nome"));
-				vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
+				vacina= this.converterRsToVacina(rs);
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
@@ -143,14 +135,8 @@ public class VacinaDAO {
 		try {	
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				Vacina vacina = new Vacina();
-				vacina.setIdVacina(rs.getInt("idvacina"));
-				vacina.setNome(rs.getString("nome"));
-				vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
 				
-				listaVacinas.add(vacina);
+				listaVacinas.add(this.converterRsToVacina(rs));
 			}
 			
 			
@@ -235,6 +221,28 @@ public class VacinaDAO {
 		
 		return vacina;
 
+	}
+	
+	private PreparedStatement prepararStatementCadastro(PreparedStatement stmt, Vacina vacina) throws SQLException {
+		
+		stmt.setString(1 , vacina.getNome());
+		stmt.setString(2 , vacina.getPesquisadorResponsavel());
+		stmt.setString(3 , vacina.getDataInicioPesquisa().toString());
+		stmt.setString(4 , vacina.getEstagioVacina().name());
+		
+		return stmt;
+	}
+	
+	private Vacina converterRsToVacina (ResultSet rs) throws SQLException {
+		
+		Vacina vacina = new Vacina();
+		vacina.setIdVacina(rs.getInt("idvacina"));
+		vacina.setNome(rs.getString("nome"));
+		vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
+		vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
+		vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
+		
+		return vacina;
 	}
 
 

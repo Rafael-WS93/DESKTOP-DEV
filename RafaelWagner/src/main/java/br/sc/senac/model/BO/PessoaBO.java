@@ -1,5 +1,7 @@
 package br.sc.senac.model.BO;
 
+import java.util.List;
+
 import br.sc.senac.exception.CpfIndisponivelException;
 import br.sc.senac.model.DAO.PessoaDAO;
 import br.sc.senac.model.vo.Pessoa;
@@ -41,6 +43,20 @@ public class PessoaBO {
 		} else {
 			return "Erro ao excluir.";
 		}
+	}
+	
+	public Pessoa consultarPessoaPorIdBO(int id) {
+		PessoaDAO pessoaDAO = new PessoaDAO();
+
+		return pessoaDAO.consultarPessoaPorIdDAO(id);
+
+		
+	}
+	
+	public List<Pessoa> consultarTodasPessoasBO() {
+		PessoaDAO pessoaDAO = new PessoaDAO();
+		
+		return pessoaDAO.consultarTodasPessoasDAO();
 	}
 
 }

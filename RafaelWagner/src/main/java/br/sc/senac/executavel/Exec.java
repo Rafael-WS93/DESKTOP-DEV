@@ -16,18 +16,14 @@ public class Exec {
 	
 	public static void main (String[] args) {
 
-		AvaliacaoAplicacao avaliacaoAplicacao = new AvaliacaoAplicacao();
-		AplicacaoVacina apl = new AplicacaoVacina();
-		apl.setIdAplicacao(2);
-		avaliacaoAplicacao.setDataAvaliacao(LocalDate.now());
-		avaliacaoAplicacao.setDescricao("muito bom, perfeita");
-		avaliacaoAplicacao.setNota(5);
-		avaliacaoAplicacao.setAplicacao(apl);
-		avaliacaoAplicacao.setIdAvaliacaoAplicacao(2);
+		AplicacaoVacina aplicacaoVacina = new AplicacaoVacina();
+		aplicacaoVacina.setDataAplicação(LocalDate.now());
+		aplicacaoVacina.setIdPessoa(1);
+		aplicacaoVacina.setIdVacina(1);
 		
-		AvaliacaoAplicacaoDAO avDAO = new AvaliacaoAplicacaoDAO();
 		
-		avDAO.excluirAvaliacaoAplicacao(1);
+		AplicacaoDAO aplicacaoDAO = new AplicacaoDAO();
+		aplicacaoDAO.cadastrarAplicacaoVacina(aplicacaoVacina);		
 
 	}
 

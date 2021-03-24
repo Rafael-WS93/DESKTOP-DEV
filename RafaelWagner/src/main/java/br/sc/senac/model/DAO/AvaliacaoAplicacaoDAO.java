@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,8 @@ import br.sc.senac.model.vo.AvaliacaoAplicacao;
 
 public class AvaliacaoAplicacaoDAO {
 	
-public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
+	
+public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avaliacaoAplicacao) {
 		
 		int resultadoInt = 0;
 		
@@ -24,13 +24,8 @@ public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
-			stmt.setString(1 , String.valueOf(avalicacaoAplicacao.getAplicacao().getIdAplicacao()));
 			
-			stmt.setString(2 , String.valueOf(avalicacaoAplicacao.getNota()));
-			
-			stmt.setString(3 , String.valueOf(avalicacaoAplicacao.getDescricao()));			
-			
-			stmt.setString(4 , String.valueOf(avalicacaoAplicacao.getDataAvaliacao()));
+			stmt = this.prepararStatementCadastro(stmt, avaliacaoAplicacao);
 			
 			resultadoInt = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -52,7 +47,7 @@ public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
 		
 	}
 	
-	public boolean atualizarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
+	public boolean atualizarAvaliacaoAplicacao(AvaliacaoAplicacao avaliacaoAplicacao) {
 		
 		boolean resultadoBool = false;
 		
@@ -64,15 +59,9 @@ public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
 		
 		try {
 
-			stmt.setString(1 , String.valueOf(avalicacaoAplicacao.getAplicacao().getIdAplicacao()));
+			stmt = this.prepararStatementCadastro(stmt, avaliacaoAplicacao);
 			
-			stmt.setString(2 , String.valueOf(avalicacaoAplicacao.getNota()));
-			
-			stmt.setString(3 , String.valueOf(avalicacaoAplicacao.getDescricao()));			
-			
-			stmt.setString(4 , String.valueOf(avalicacaoAplicacao.getDataAvaliacao()));
-			
-			stmt.setString(5, String.valueOf(avalicacaoAplicacao.getIdAvaliacaoAplicacao()));
+			stmt.setString(5, String.valueOf(avaliacaoAplicacao.getIdAvaliacaoAplicacao()));
 			
 			stmt.executeUpdate();
 			
@@ -115,15 +104,7 @@ public int cadastrarAvaliacaoAplicacao(AvaliacaoAplicacao avalicacaoAplicacao) {
 			
 			if(rs.next()) {
 				
-				AplicacaoDAO aplicacaoVacinaDAO = new AplicacaoDAO();
-				
-				avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt("idAVALIACAO_APLICACAO") ) );
-				
-				avaliacaoAplicacao.setNota(rs.getInt("nota"));
-
-				avaliacaoAplicacao.setDescricao(rs.getString("descricao"));
-				
-				avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString("dt_avaliacao")));
+				avaliacaoAplicacao = this.converterRStoObj(rs);
 
 
 				
@@ -162,21 +143,8 @@ public List<AvaliacaoAplicacao> consultarTodasAvaliacoes() {
 		try {	
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				
-				AvaliacaoAplicacao avaliacaoAplicacao = new AvaliacaoAplicacao();
-				
-				AplicacaoDAO aplicacaoVacinaDAO = new AplicacaoDAO();
-				avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt("idAVALIACAO_APLICACAO") ) );
-				
-				avaliacaoAplicacao.setNota(rs.getInt("nota"));
-
-				avaliacaoAplicacao.setDescricao(rs.getString("descricao"));
-				
-				avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString("dt_avaliacao")));
-
-
-				
-				listaAvaliacoes.add(avaliacaoAplicacao);
+		
+				listaAvaliacoes.add(this.converterRStoObj(rs));
 			}
 			
 			
@@ -217,6 +185,44 @@ public List<AvaliacaoAplicacao> consultarTodasAvaliacoes() {
 		}
 		
 		return resultadoInt;
+	}
+	
+	
+	
+	
+	private PreparedStatement prepararStatementCadastro(PreparedStatement stmt, AvaliacaoAplicacao avaliacaoAplicacao) throws SQLException {
+		
+		stmt.setString(1 , String.valueOf(avaliacaoAplicacao.getAplicacao().getIdAplicacao()));
+		
+		stmt.setString(2 , String.valueOf(avaliacaoAplicacao.getNota()));
+		
+		stmt.setString(3 , String.valueOf(avaliacaoAplicacao.getDescricao()));			
+		
+		stmt.setString(4 , String.valueOf(avaliacaoAplicacao.getDataAvaliacao()));
+		
+		
+		return stmt;
+	}
+	
+	private AvaliacaoAplicacao converterRStoObj(ResultSet rs) throws SQLException {
+		AvaliacaoAplicacao avaliacaoAplicacao = new AvaliacaoAplicacao();
+		AplicacaoDAO aplicacaoVacinaDAO = new AplicacaoDAO();
+		
+		avaliacaoAplicacao.setAplicacao( aplicacaoVacinaDAO.consultarAplicacaoVacinaPorId( rs.getInt("idAVALIACAO_APLICACAO") ) );
+		
+		avaliacaoAplicacao.setNota(rs.getInt("nota"));
+
+		avaliacaoAplicacao.setDescricao(rs.getString("descricao"));
+		
+		avaliacaoAplicacao.setDataAvaliacao(LocalDate.parse(rs.getString("dt_avaliacao")));
+		
+		avaliacaoAplicacao.setIdAvaliacaoAplicacao(rs.getInt("idAVALIACAO_APLICACAO"));
+		
+		
+		
+		
+		return avaliacaoAplicacao;
+		
 	}
 	
 	
