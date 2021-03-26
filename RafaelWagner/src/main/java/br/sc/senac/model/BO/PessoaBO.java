@@ -11,7 +11,7 @@ public class PessoaBO {
 	public String cadastrarPessoaBO(Pessoa pessoa) throws CpfIndisponivelException{
 		PessoaDAO pessoaDAO = new PessoaDAO();
 		
-		if (pessoaDAO.verificarPessoaPorCpfDAO(pessoa.getCpf())) {
+		if (pessoaDAO.consultarPessoaPorCpfDAO(pessoa.getCpf()) != null) {
 			throw new CpfIndisponivelException("Erro, CPF já Cadastrado.");
 		} else {
 			
@@ -25,14 +25,23 @@ public class PessoaBO {
 
 	}
 	
-	public String atualizarPessoaBO(Pessoa pessoa) {
+	public String atualizarPessoaBO(Pessoa pessoa) throws CpfIndisponivelException{
 		PessoaDAO pessoaDAO = new PessoaDAO();
 		
-		if (pessoaDAO.atualizarVacinaDAO(pessoa) == 1) {
-			return "Atualização realizada com sucesso.";
-		} else {
-			return "Erro na Atualização.";
+		Pessoa verificacaoPessoa = pessoaDAO.consultarPessoaPorCpfDAO(pessoa.getCpf());
+		
+		if (verificacaoPessoa != null && pessoa.getIdPessoa() != verificacaoPessoa.getIdPessoa()) {
+			throw new CpfIndisponivelException("Erro, CPF já Cadastrado.");
+		} else { 
+			
+			if (pessoaDAO.atualizarPessoaDAO(pessoa) == 1) {
+				return "Atualização realizada com sucesso.";
+			} else {
+				return "Erro na Atualização.";
+			}
 		}
+		
+
 	}
 	
 	public String excluirPessoaBO(int id) {

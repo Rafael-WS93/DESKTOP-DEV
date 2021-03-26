@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.sc.senac.model.vo.AplicacaoVacina;
+import br.sc.senac.model.vo.CategoriaPessoa;
 import br.sc.senac.model.vo.Pessoa;
 import br.sc.senac.model.vo.SexoPessoa;
 
@@ -19,7 +20,7 @@ public class PessoaDAO {
 		
 		int resultadoInt = 0;
 		
-		String sql = "INSERT INTO Pessoa(nome ,cpf ,nascimento ,sexo) values (?,?,?,?);";
+		String sql = "INSERT INTO Pessoa(nome ,cpf ,nascimento ,sexo ,CATEGORIA) values (?,?,?,?,?);";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -48,11 +49,11 @@ public class PessoaDAO {
 		
 	}
 	
-	public int atualizarVacinaDAO(Pessoa pessoa) {
+	public int atualizarPessoaDAO(Pessoa pessoa) {
 		
 		int resultadoInt = 0;
 		
-		String sql = "UPDATE PESSOA SET nome= ? ,cpf= ? ,nascimento= ? ,sexo= ? where idpessoa = ?;";
+		String sql = "UPDATE PESSOA SET nome= ? ,cpf= ? ,nascimento= ? ,sexo= ? ,CATEGORIA = ? where idpessoa = ?;";
 		
 		
 		Connection conn = Banco.getConnection();
@@ -62,7 +63,7 @@ public class PessoaDAO {
 			
 			stmt = this.prepararStatementCadastro(stmt, pessoa);
 			
-			stmt.setString(5, String.valueOf(pessoa.getIdPessoa()));
+			stmt.setString(6, String.valueOf(pessoa.getIdPessoa()));
 			
 			resultadoInt = stmt.executeUpdate();
 			 
@@ -87,7 +88,7 @@ public class PessoaDAO {
 	
 	public Pessoa consultarPessoaPorIdDAO(Integer id) {
 		
-		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA WHERE IDPESSOA= ? ;";
+		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo ,CATEGORIA FROM PESSOA WHERE IDPESSOA= ? ;";
 		
 	
 		Pessoa pessoa = new Pessoa();
@@ -130,7 +131,7 @@ public class PessoaDAO {
 	
 public List<Pessoa> consultarTodasPessoasDAO() {
 		
-		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA;";
+		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo ,CATEGORIA FROM PESSOA;";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -184,12 +185,11 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 		return resultadoInt;
 	}
 
-	public boolean verificarPessoaPorCpfDAO(String cpf) {
-		boolean resultadoBool = true;
+	public Pessoa consultarPessoaPorCpfDAO(String cpf) {
 		
-		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo FROM PESSOA WHERE cpf= ? ;";
+		String sql = "SELECT idpessoa ,nome ,cpf ,nascimento ,sexo ,CATEGORIA FROM PESSOA WHERE cpf= ? ;";
 		
-		
+		Pessoa pessoa = new Pessoa();
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 			
@@ -201,7 +201,7 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 			
 			rs = stmt.executeQuery();
 			
-			resultadoBool = rs.next();
+			pessoa = converterRS(rs);
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -216,7 +216,7 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 			
 		}
 		
-		return resultadoBool;
+		return pessoa;
 	}
 	
 	private PreparedStatement prepararStatementCadastro(PreparedStatement stmt, Pessoa pessoa) throws SQLException {
@@ -225,9 +225,9 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 		stmt.setString(2 , pessoa.getCpf());
 		stmt.setString(3 , pessoa.getDataNascimento().toString());
 		stmt.setString(4 , pessoa.getSexo().name());
+		stmt.setString(5, pessoa.getCategoria().name());
 		
-		AplicacaoDAO aplicacaoDAO = new AplicacaoDAO();
-		pessoa.setVacinacoes(aplicacaoDAO.consultarTodasAplicacacoesPorPessoa(pessoa.getIdPessoa()));
+
 		
 		return stmt;
 		
@@ -240,6 +240,11 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 		pessoa.setCpf(rs.getString("cpf"));
 		pessoa.setDataNascimento(LocalDate.parse(rs.getString("nascimento")));
 		pessoa.setSexo(SexoPessoa.valueOf(rs.getString("sexo")));
+		pessoa.setCategoria(CategoriaPessoa.valueOf(rs.getString("CATEGORIA")));
+		
+		
+		AplicacaoDAO aplicacaoDAO = new AplicacaoDAO();
+		pessoa.setVacinacoes(aplicacaoDAO.consultarTodasAplicacacoesPorPessoa(pessoa.getIdPessoa()));
 		
 		return pessoa;
 	}

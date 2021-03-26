@@ -181,8 +181,8 @@ public List<AplicacaoVacina> consultarTodasAplicacacoes() {
 		return resultadoInt;
 	}
 	
-	public List<AplicacaoVacina> consultarTodasAplicacacoesPorPessoa(int id) {
-		String sql = "SELECT idaplicacao ,idpessoa ,idvacina ,dt_aplicacao FROM APLICACAO where IDPESSOA= ?;";
+	public List<AplicacaoVacina> consultarTodasAplicacacoesPorPessoa(Integer id) {
+		String sql = "SELECT idaplicacao ,idpessoa ,idvacina ,dt_aplicacao FROM APLICACAO where IDPESSOA = ? ;";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -191,8 +191,8 @@ public List<AplicacaoVacina> consultarTodasAplicacacoes() {
 		
 		List<AplicacaoVacina> listaAplicacaoVacinas = new ArrayList<AplicacaoVacina>();
 		try {
-			stmt.setString(1, String.valueOf(id));
-			rs = stmt.executeQuery(sql);
+			stmt.setString(1, id.toString());
+			rs = stmt.executeQuery();
 			while(rs.next()) {
 				
 				listaAplicacaoVacinas.add(this.converterRStoAplicacaoVacina(rs));
