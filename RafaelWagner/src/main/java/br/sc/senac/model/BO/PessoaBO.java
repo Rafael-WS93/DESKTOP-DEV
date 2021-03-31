@@ -12,7 +12,7 @@ public class PessoaBO {
 		PessoaDAO pessoaDAO = new PessoaDAO();
 		
 		if (pessoaDAO.consultarPessoaPorCpfDAO(pessoa.getCpf()) != null) {
-			throw new CpfIndisponivelException("Erro, CPF já Cadastrado.");
+			throw new CpfIndisponivelException("CPF já está sendo utilizado.");
 		} else {
 			
 			if (pessoaDAO.cadastrarPessoaDAO(pessoa) == 1) {

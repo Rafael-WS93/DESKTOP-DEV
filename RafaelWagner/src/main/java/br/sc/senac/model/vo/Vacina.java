@@ -6,19 +6,35 @@ public class Vacina {
 	
 	private int idVacina;
 	private String nome;
-	private String pesquisadorResponsavel;
+	private Pessoa pesquisadorResponsavel;
 	private LocalDate dataInicioPesquisa;
 	private EstagioVacina estagioVacina;
+	private String nomePaisOrigem;
 	
-	public Vacina(int idVacina, String nome, String pesquisadorResponsavel, LocalDate dataInicioPesquisa,
-			EstagioVacina estagioVacina) {
+
+	
+	
+	
+	public Vacina(int idVacina, String nome, Pessoa pesquisadorResponsavel, LocalDate dataInicioPesquisa,
+			EstagioVacina estagioVacina, String nome_pais_origem) {
 		super();
+		this.idVacina = idVacina;
 		this.nome = nome;
 		this.pesquisadorResponsavel = pesquisadorResponsavel;
 		this.dataInicioPesquisa = dataInicioPesquisa;
 		this.estagioVacina = estagioVacina;
-		this.idVacina = idVacina;
+		this.nomePaisOrigem = nome_pais_origem;
 	}
+
+
+	public void setNomePaisOrigem(String nome_pais_origem) {
+		this.nomePaisOrigem = nome_pais_origem;
+	}
+	
+	public String getNomePaisOrigem() {
+		return nomePaisOrigem;
+	}
+
 
 	public Vacina() {
 		super();
@@ -32,11 +48,11 @@ public class Vacina {
 		this.nome = nome;
 	}
 
-	public String getPesquisadorResponsavel() {
+	public Pessoa getPesquisadorResponsavel() {
 		return pesquisadorResponsavel;
 	}
 
-	public void setPesquisadorResponsavel(String pesquisadorResponsavel) {
+	public void setPesquisadorResponsavel(Pessoa pesquisadorResponsavel) {
 		this.pesquisadorResponsavel = pesquisadorResponsavel;
 	}
 

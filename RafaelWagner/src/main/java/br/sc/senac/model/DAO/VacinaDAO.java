@@ -17,7 +17,7 @@ public class VacinaDAO {
 	public int cadastrarVacinaDAO (Vacina vacina){
 		int resultadoInt = 0;
 		
-		String sql = "INSERT INTO VACINA(nome ,PESQUISADOR ,inicio_pesquisa ,estagio) values (?,?,?,?);";
+		String sql = "INSERT INTO VACINA(nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem) values (?,?,?,?,?);";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -48,7 +48,7 @@ public class VacinaDAO {
 	public int atualizarVacinaDAO(Vacina vacina) {
 		int resultadoInt = 0;
 		
-		String sql = "UPDATE VACINA SET nome= ? ,pesquisador= ? ,inicio_pesquisa= ? ,estagio= ? where idvacina = ?;";
+		String sql = "UPDATE VACINA SET nome= ? ,IDPESQUISADOR= ? ,inicio_pesquisa= ? ,estagio= ? ,nome_pais_origem=? where idvacina = ?;";
 		
 		
 		Connection conn = Banco.getConnection();
@@ -59,7 +59,7 @@ public class VacinaDAO {
 			
 			stmt = this.prepararStatementCadastro(stmt, vacina);
 			
-			stmt.setString(5, String.valueOf(vacina.getIdVacina()));
+			stmt.setString(6, String.valueOf(vacina.getIdVacina()));
 			
 			resultadoInt = stmt.executeUpdate();
 
@@ -81,7 +81,7 @@ public class VacinaDAO {
 	
 	public Vacina consultaVacinaPorIdDAO(Integer id) {
 		
-		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA WHERE IDVACINA= ? ;";
+		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE IDVACINA= ? ;";
 		
 	
 		Vacina vacina = new Vacina();
@@ -124,7 +124,7 @@ public class VacinaDAO {
 	
 	public List<Vacina> consultarTodasVacinasDAO() {
 		
-		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA;";
+		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA;";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -149,7 +149,7 @@ public class VacinaDAO {
 		
 	}
 	
-	public int excluirVacinaDAO(int id) {
+	public int excluirVacinaDAOById(int id) {
 		int resultadoInt = 0;
 		
 		String sql = "DELETE FROM VACINA WHERE IDVACINA= ?;";
@@ -177,9 +177,40 @@ public class VacinaDAO {
 		
 		return resultadoInt;
 	}
+	
+	public int excluirVacinaDAOByNomeEPais(Vacina vacina) {
+		int resultadoInt = 0;
+		
+		String sql = "DELETE FROM VACINA WHERE nome= ? and nome_pais_origem=?;";
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		
+		try {
+			stmt.setString(1, vacina.getNome());
+			stmt.setString(2, vacina.getNomePaisOrigem());
+			
+			
+			resultadoInt = stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return resultadoInt;
+	}
 
 	public Vacina ConsultarVacinaPorNomeDAO(String nome) {
-		String sql = "SELECT idvacina ,nome ,PESQUISADOR ,inicio_pesquisa ,estagio FROM VACINA WHERE nome= ? ;";
+		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE nome= ? ;";
 		
 		
 		Vacina vacina = new Vacina();
@@ -196,11 +227,7 @@ public class VacinaDAO {
 			
 			if(rs.next()) {
 				
-				vacina.setIdVacina(rs.getInt("idvacina"));
-				vacina.setNome(rs.getString("nome"));
-				vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
-				vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
-				vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
+				vacina = converterRsToVacina(rs);
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
@@ -223,12 +250,54 @@ public class VacinaDAO {
 
 	}
 	
+	public Vacina ConsultarVacinaPorNomeEPais(Vacina vacina) {
+		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE nome= ? and nome_pais_origem=?;";
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+			
+		ResultSet rs = null;
+		try {
+			
+			
+			stmt.setString(1, vacina.getNome());
+			stmt.setString(2, vacina.getNomePaisOrigem());
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				vacina = converterRsToVacina(rs);
+				
+			} else {
+				System.out.println("Ocorrencia não existe");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		return vacina;
+		
+	}
+	
 	private PreparedStatement prepararStatementCadastro(PreparedStatement stmt, Vacina vacina) throws SQLException {
 		
 		stmt.setString(1 , vacina.getNome());
-		stmt.setString(2 , vacina.getPesquisadorResponsavel());
+		stmt.setString(2 , String.valueOf(vacina.getPesquisadorResponsavel().getIdPessoa()));
 		stmt.setString(3 , vacina.getDataInicioPesquisa().toString());
 		stmt.setString(4 , vacina.getEstagioVacina().name());
+		stmt.setString(5, vacina.getNomePaisOrigem());
 		
 		return stmt;
 	}
@@ -238,12 +307,19 @@ public class VacinaDAO {
 		Vacina vacina = new Vacina();
 		vacina.setIdVacina(rs.getInt("idvacina"));
 		vacina.setNome(rs.getString("nome"));
-		vacina.setPesquisadorResponsavel(rs.getString("PESQUISADOR"));
+		
+		PessoaDAO pessoaDAO = new PessoaDAO();
+		
+		vacina.setPesquisadorResponsavel(pessoaDAO.consultarPessoaPorIdDAO(rs.getInt("IDPESQUISADOR")));
+		
 		vacina.setDataInicioPesquisa(LocalDate.parse(rs.getString("inicio_pesquisa")));
 		vacina.setEstagioVacina(EstagioVacina.valueOf(rs.getString("estagio")));
+		vacina.setNomePaisOrigem(rs.getString("nome_pais_origem"));
 		
 		return vacina;
 	}
+
+
 
 
 }
