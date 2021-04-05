@@ -81,3 +81,5 @@ VALUES
     ,(10,'CANSAÇO')
 ;
 */
+
+select*from vacina;

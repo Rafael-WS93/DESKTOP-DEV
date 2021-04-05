@@ -271,6 +271,7 @@ public class VacinaDAO {
 				
 			} else {
 				System.out.println("Ocorrencia não existe");
+				vacina = null;
 			}
 			
 		} catch (SQLException e) {

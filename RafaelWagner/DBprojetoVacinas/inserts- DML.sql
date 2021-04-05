@@ -24,14 +24,6 @@ USE DBVACINACAO;
     , 'F'
     , 'VOLUNTARIO'
     )
-    
-    ,(CPF 
-    , NOME 
-    , NASCIMENTO 
-    , SEXO
-    , categoria
-    )
-   
    , ( '69848963211'
 	, 'MARIA'
     , '1976-07-09'

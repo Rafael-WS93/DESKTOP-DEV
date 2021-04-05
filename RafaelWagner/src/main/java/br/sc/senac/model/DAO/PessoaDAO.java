@@ -201,7 +201,13 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 			
 			rs = stmt.executeQuery();
 			
-			pessoa = converterRS(rs);
+			if(rs.next()) {
+				pessoa = converterRS(rs);
+			} else {
+				System.out.println("Ocorrencia não existe");
+			}
+			
+
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());

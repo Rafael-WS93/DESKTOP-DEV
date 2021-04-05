@@ -11,11 +11,12 @@ public class PessoaBO {
 	public String cadastrarPessoaBO(Pessoa pessoa) throws CpfIndisponivelException{
 		PessoaDAO pessoaDAO = new PessoaDAO();
 		
-		if (pessoaDAO.consultarPessoaPorCpfDAO(pessoa.getCpf()) != null) {
-			throw new CpfIndisponivelException("CPF já está sendo utilizado.");
+		if (pessoaDAO.consultarPessoaPorCpfDAO(pessoa.getCpf()).getIdPessoa() != 0) {
+			throw new CpfIndisponivelException("O CPF já está sendo utilizado.");
 		} else {
 			
 			if (pessoaDAO.cadastrarPessoaDAO(pessoa) == 1) {
+				
 				return "Pessoa cadastada com sucesso.";
 			} else {
 				return "Erro ao cadastrar nova pessoa.";
@@ -66,6 +67,21 @@ public class PessoaBO {
 		PessoaDAO pessoaDAO = new PessoaDAO();
 		
 		return pessoaDAO.consultarTodasPessoasDAO();
+	}
+	
+	public Pessoa consultarPessoarPorCpfBO(String cpf) {
+		PessoaDAO pessoaDAO = new PessoaDAO();
+		
+		Pessoa pessoaConsulta = pessoaDAO.consultarPessoaPorCpfDAO(cpf);
+		
+		if(pessoaConsulta.getNome() != null) {
+			return pessoaConsulta;
+		} else {
+			return null;
+		}
+		
+		
+		
 	}
 
 }
