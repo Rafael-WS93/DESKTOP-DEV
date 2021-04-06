@@ -2,12 +2,8 @@ package br.sc.senac.model.BO;
 
 import java.util.List;
 
-import br.sc.senac.exception.CpfIndisponivelException;
 import br.sc.senac.exception.NomeVacinaIndisponivelException;
-import br.sc.senac.model.DAO.PessoaDAO;
 import br.sc.senac.model.DAO.VacinaDAO;
-import br.sc.senac.model.vo.CategoriaPessoa;
-import br.sc.senac.model.vo.Pessoa;
 import br.sc.senac.model.vo.Vacina;
 
 public class VacinaBO {
@@ -60,8 +56,6 @@ public class VacinaBO {
 	
 	public String excluirVacinaBOByNomeEPais(Vacina vacina) {
 		VacinaDAO vacinaDAO = new VacinaDAO();
-		
-		if(vacinaDAO.ConsultarVacinaPorNomeEPais(vacina) != null) {
 			
 			if (vacinaDAO.excluirVacinaDAOByNomeEPais(vacina) == 1) {
 				return "Vacina excluida com sucesso.";
@@ -69,9 +63,6 @@ public class VacinaBO {
 				return "Erro ao Excluir Vacina";
 			}
 			
-		} else {
-			return "Vacina não existe";
-		}
 		
 		
 	}
@@ -86,6 +77,14 @@ public class VacinaBO {
 	public List<Vacina> consultarTodasVacinasBO() {
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		return vacinaDAO.consultarTodasVacinasDAO();
+	}
+	
+	public Vacina consultarVacinaPorNomeEPais(Vacina vacina) {
+		VacinaDAO vacinaDAO = new VacinaDAO();
+		
+		return vacinaDAO.ConsultarVacinaPorNomeEPais(vacina);
+	
+		
 	}
 
 }

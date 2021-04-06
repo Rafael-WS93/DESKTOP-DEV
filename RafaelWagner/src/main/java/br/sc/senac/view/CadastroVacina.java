@@ -3,6 +3,7 @@ package br.sc.senac.view;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -24,52 +25,61 @@ public class CadastroVacina {
 	
 	public void menuVacina() {
 		String message = "1- Cadastrar Vacina\n"
-						+ "2-Consultar Vacina\n"
+						+ "2-Consultar Todas Vacinas\n"
 						+ "3-Excluir Vacina\n"
-						//+ "4-Atualizar Vacina\n"
-						+ "Digite a opção:";
+						+ "4-Sair\n"
+						+ "Escolha a opção:";
+
+		Integer[] opcoes = {1 ,2 ,3, 4};
 		
-		
-		int opcao = Integer.parseInt(JOptionPane.showInputDialog(message));
+		Integer opcao = (Integer) JOptionPane.showInputDialog(null, message, "Menu Vacina",  JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
 		
 		switch(opcao) {
 			case 1:{
 				this.menuCadastrarVacina();
-				break;
+				this.menuVacina();
+				break; 
 			}
 			case 2: {
-				//this.menuConsultarVacina();
+				this.menuConsultarTodasVacinas();
+				this.menuVacina();
 				break;
 			}
 			case 3: {
-				//this.menuExcluirVacina();
+				this.menuExcluirVacina();
+				this.menuVacina();
 				break;
 			}
 			case 4: {
-				//this.menuAtualizarVacina();
+				JOptionPane.showMessageDialog(null, "Fechando", "Bye", JOptionPane.PLAIN_MESSAGE);
 				break;
 			}
 			default: {
-				JOptionPane.showInternalMessageDialog(null, "Opção invalida!");
+				JOptionPane.showMessageDialog(null, "Opção invalida!");
 				this.menuVacina();
 			}
 		}
 		
 	}
 
+
+
 	private void menuCadastrarVacina() {
-		String message = "";
+		String titulo = "Cadastro Vacina";
 		
 		Vacina vacina = new Vacina();
 		
 		VacinaController controller = new VacinaController();
 		
-		vacina = this.cadastrarPesquisador(vacina, controller);
+		vacina = this.menuConsultarPesquisador(vacina, controller);
 		
 		do {
 			try {
 				vacina.setDataInicioPesquisa(LocalDate.parse(
-						JOptionPane.showInputDialog("Digite a data de inicio da pesquisa (formato dia/mes/ano - DD/MM/AAAA):")
+						JOptionPane.showInputDialog(null 
+							, "Digite a data de inicio da pesquisa (DD/MM/AAAA):"
+							, titulo
+							, JOptionPane.QUESTION_MESSAGE)
 						, formatadorData));
 			} catch (DateTimeParseException e) {
 				JOptionPane.showMessageDialog(null, "Informe a data no formato especificado (dia/mes/ano):\nex:02/12/2021");
@@ -78,43 +88,21 @@ public class CadastroVacina {
 		} while (vacina.getDataInicioPesquisa() == null);
 		
 
+		vacina.setNome(JOptionPane.showInputDialog(null ,"Digite o nome da vacina: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		while (vacina.getNome().equals("")) {
+			JOptionPane.showMessageDialog(null, "nome digitado incorretamente\n digite um nome", "Aviso", JOptionPane.WARNING_MESSAGE);
+			vacina.setNome(JOptionPane.showInputDialog(null ,"Digite o nome da vacina: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		}
 		
-		vacina.setNome(JOptionPane.showInputDialog("Digite o nome da vacina: "));
+		vacina.setNomePaisOrigem(JOptionPane.showInputDialog(null, "Digite, por extenso o país de Origem: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		while (vacina.getNomePaisOrigem().equals("")) {
+			JOptionPane.showMessageDialog(null, "nome digitado incorretamente\n digite um nome", "Aviso", JOptionPane.WARNING_MESSAGE);
+			vacina.setNomePaisOrigem(JOptionPane.showInputDialog(null, "Digite, por extenso o país de Origem: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		}
 		
-		vacina.setNomePaisOrigem(JOptionPane.showInputDialog("Digite, por extenso o país de Origem: "));
+		EstagioVacina[] estagios = {EstagioVacina.INICIAL ,EstagioVacina.TESTE ,EstagioVacina.APLICACAO_EM_MASSA};
+		vacina.setEstagioVacina((EstagioVacina) JOptionPane.showInputDialog(null, "Selecione o estágio da vacina:\n", titulo,  JOptionPane.QUESTION_MESSAGE, null, estagios, estagios[0]));
 		
-		do {
-			int estagioVacina = 0;
-			try {
-				estagioVacina = Integer.parseInt(JOptionPane.showInputDialog("Digite o estágio da vacina:\n"
-						+ "1 - Inicial\n"
-						+ "2- Teste\n"
-						+ "3- Aplicação em Massa\n"));
-			} catch (NumberFormatException e){
-				JOptionPane.showMessageDialog(null, "Digite um valor numerico");
-			}
-
-			
-			switch(estagioVacina) {
-			case 1: {
-				vacina.setEstagioVacina(EstagioVacina.INICIAL);
-				break;
-			}
-			case 2: {
-				vacina.setEstagioVacina(EstagioVacina.TESTE);
-				break;
-			}
-			case 3: {
-				vacina.setEstagioVacina(EstagioVacina.APLICACAO_EM_MASSA);
-				break;
-			}
-			default: {
-				JOptionPane.showMessageDialog(null, "Valor inválido, por favor insira um número correto:");
-				break;
-			}
-			}
-					
-		} while (vacina.getEstagioVacina() == null);
 		
 		try {
 			JOptionPane.showMessageDialog(null, controller.cadastrarVacinaController(vacina));
@@ -126,16 +114,58 @@ public class CadastroVacina {
 
 	}
 
-	private Vacina cadastrarPesquisador(Vacina vacina, VacinaController controller) {
+	private void menuConsultarTodasVacinas() {
+		String message = "";
+		VacinaController vacinaController = new VacinaController();
 		
+		List<Vacina> lista = vacinaController.consultarTodasVacinas();
+		
+		if(!lista.isEmpty()) {
+			for(Vacina vacina : lista) {
+				message += vacina.toString();
+			}
+			
+			JOptionPane.showMessageDialog(null, message, "Lista de vacinas", JOptionPane.INFORMATION_MESSAGE, null);
+		}
+		
+		
+	}
+
+	private void menuExcluirVacina() {
+		Vacina vacina = new Vacina();
+		String titulo = "Excluir Vacina";
+		
+		vacina.setNome(JOptionPane.showInputDialog(null ,"Digite o nome da vacina: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		while (vacina.getNome().equals("")) {
+			JOptionPane.showMessageDialog(null, "nome digitado incorretamente\n digite um nome", "Aviso", JOptionPane.WARNING_MESSAGE);
+			vacina.setNome(JOptionPane.showInputDialog(null ,"Digite o nome da vacina: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		}
+		
+		vacina.setNomePaisOrigem(JOptionPane.showInputDialog(null, "Digite, por extenso o país de Origem: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		while (vacina.getNomePaisOrigem().equals("")) {
+			JOptionPane.showMessageDialog(null, "nome digitado incorretamente\n digite um nome", "Aviso", JOptionPane.WARNING_MESSAGE);
+			vacina.setNomePaisOrigem(JOptionPane.showInputDialog(null, "Digite, por extenso o país de Origem: " ,titulo ,JOptionPane.QUESTION_MESSAGE));
+		}
+		
+		VacinaController vacinaController = new VacinaController();
+		
+		JOptionPane.showMessageDialog(null, vacinaController.excluirVacina(vacina), titulo, JOptionPane.INFORMATION_MESSAGE);
+		
+		
+	}
+	
+	private Vacina menuConsultarPesquisador(Vacina vacina, VacinaController controller) {
+		String title = "Cadastro Pesquisador";
 		Pessoa pesquisador = new Pessoa();
 		
 		pesquisador.setCategoria(CategoriaPessoa.PESQUISADOR);
 		
 		
-		pesquisador.setCpf(JOptionPane.showInputDialog("Digite o cpf do pesquisador"));
-		while (pesquisador.getCpf().length() != 11) {
-			pesquisador.setCpf(JOptionPane.showInputDialog("Digite o cpf do pesquisador\n deve conter 11 caracteres"));
+		
+		pesquisador.setCpf(JOptionPane.showInputDialog(null, "Digite o cpf do pesquisador (somente numeros): ", title ,JOptionPane.QUESTION_MESSAGE));
+		while (!pesquisador.getCpf().matches("^[0-9]{11}+$")) {
+			JOptionPane.showMessageDialog(null, "Aviso: preencha somente com 11 (onze) números: ", "Aviso" ,JOptionPane.WARNING_MESSAGE);
+			pesquisador.setCpf(JOptionPane.showInputDialog(null, "Digite o cpf do pesquisador (somente numeros): ", title ,JOptionPane.QUESTION_MESSAGE));
 		}
 	
 		try {
@@ -145,55 +175,83 @@ public class CadastroVacina {
 		}
 		
 		if(pesquisador.getIdPessoa() == 0 ) {
-			JOptionPane.showMessageDialog(null, "Pesquisador não cadastrado, por favor informe os dados a seguir.");
 			
-			pesquisador.setNome(JOptionPane.showInputDialog("Digite o nome do pesquisador Responsável: "));
-			while(pesquisador.getNome().equals("")) {
-				JOptionPane.showMessageDialog(null, "Informe o nome corretamente.");
-				pesquisador.setNome(JOptionPane.showInputDialog("Digite o nome do pesquisador Responsável: "));
-			}
-			
-			do {
-				try {
-					pesquisador.setDataNascimento(LocalDate.parse(
-							JOptionPane.showInputDialog("Digite a data de nascimento (formato dia/mes/ano): ")
-							, formatadorData));
+			if (JOptionPane.showConfirmDialog(null 
+					,"Pesquisador não cadastrado, por favor informe os dados a seguir." 
+					,title ,JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+						
+				this.menuCadastrarNovoPesquisador(vacina, controller);
 					
-				} catch (DateTimeParseException e) {
-					JOptionPane.showMessageDialog(null, "Informe a data no formato especificado (dia/mes/ano):\nex:02/12/2021");
-				}
-			} while (pesquisador.getDataNascimento() == null);
-			
-			
-
-			
-			char sexo = JOptionPane.showInputDialog("Digite o Sexo (M = masculino ou F = feminino):").charAt(0);
-			
-			if(sexo == 'F') {
-				pesquisador.setSexo(SexoPessoa.F);
 			} else {
-				pesquisador.setSexo(SexoPessoa.M);
+				this.menuVacina();
 			}
 			
-			PessoaController pessoaController = new PessoaController();
 			
-			try {
-				pessoaController.cadastrarPessoaController(pesquisador);
-				
-				vacina.setPesquisadorResponsavel(pessoaController.consultarPessoaPorCPFController(pesquisador.getCpf()));
-				
-			} catch (CpfIndisponivelException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
-				
-				this.cadastrarPesquisador(vacina, controller);
+			
+		} else {
+			if (JOptionPane.showConfirmDialog(null 
+					,"Pesquisador encontrado.\n"+ pesquisador.getNome() + "\nNasc: "+ pesquisador.getDataNascimento().format(formatadorData) 
+					,title ,JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+						vacina.setPesquisadorResponsavel(pesquisador);
+			} else {
+				this.menuVacina();
 			}
-			
-		} else vacina.setPesquisadorResponsavel(pesquisador);
 
-		
+
+		}
+	
 
 		return vacina;
 	}
+	
+	private Vacina menuCadastrarNovoPesquisador(Vacina vacina, VacinaController controller) {
+		String title = "Cadastro novo pesquisador";
+		Pessoa pesquisador = new Pessoa();
+
+		pesquisador.setNome(JOptionPane.showInputDialog(null ,"Digite o nome do pesquisador Responsável: ", title ,JOptionPane.QUESTION_MESSAGE));
+		while(pesquisador.getNome().equals("")) {
+			JOptionPane.showMessageDialog(null, "nome digitado incorretamente\n digite um nome", "Aviso", JOptionPane.WARNING_MESSAGE);
+			pesquisador.setNome(JOptionPane.showInputDialog(null ,"Digite o nome do pesquisador Responsável: ", title ,JOptionPane.QUESTION_MESSAGE));
+		}
+		
+		do {
+			try {					
+				pesquisador.setDataNascimento(LocalDate.parse(
+						JOptionPane.showInputDialog(null 
+							, "Digite a data de nascimento (DD/MM/AAAA):"
+							, title
+							, JOptionPane.QUESTION_MESSAGE)
+						, formatadorData));
+				
+			} catch (DateTimeParseException e) {
+				JOptionPane.showMessageDialog(null, "Informe a data no formato especificado (dia/mes/ano):\nex:02/12/2021", "Aviso",JOptionPane.WARNING_MESSAGE);
+			}
+		} while (pesquisador.getDataNascimento() == null);
+		
+		
+		SexoPessoa[] sexoOpcoes = {SexoPessoa.F, SexoPessoa.M};		
+		pesquisador.setSexo( (SexoPessoa) JOptionPane.showInputDialog(null, "Selecione Sexo:\n", title,  JOptionPane.QUESTION_MESSAGE, null, sexoOpcoes, sexoOpcoes[0]));
+		
+		PessoaController pessoaController = new PessoaController();
+		
+		try {
+			pessoaController.cadastrarPessoaController(pesquisador);
+			
+			JOptionPane.showMessageDialog(null, "Pesquisador cadastrado com sucesso!", title, JOptionPane.PLAIN_MESSAGE);
+			
+			vacina.setPesquisadorResponsavel(pessoaController.consultarPessoaPorCPFController(pesquisador.getCpf()));
+			
+		} catch (CpfIndisponivelException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			
+			this.menuConsultarPesquisador(vacina, controller);
+		}
+		
+		return vacina;
+		
+	}
+
+
 	
 
 }

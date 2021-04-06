@@ -231,6 +231,32 @@ public List<AplicacaoVacina> consultarTodasAplicacacoes() {
 		return aplicacao;
 	}
 
+	public List<AplicacaoVacina> consultarAplicacaoVacinaPorIdVacina(int idVacina) {
+		String sql = "SELECT idaplicacao ,idpessoa ,idvacina ,dt_aplicacao FROM APLICACAO where IDVACINA = ? ;";
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		
+		ResultSet rs = null;
+		
+		List<AplicacaoVacina> listaAplicacaoVacinas = new ArrayList<AplicacaoVacina>();
+		try {
+			stmt.setString(1, String.valueOf(idVacina));
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				
+				listaAplicacaoVacinas.add(this.converterRStoAplicacaoVacina(rs));
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listaAplicacaoVacinas;
+		
+	}
+
 
 
 }

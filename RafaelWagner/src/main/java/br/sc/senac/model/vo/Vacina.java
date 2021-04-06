@@ -1,6 +1,7 @@
 package br.sc.senac.model.vo;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Vacina {
 	
@@ -11,10 +12,8 @@ public class Vacina {
 	private EstagioVacina estagioVacina;
 	private String nomePaisOrigem;
 	
+	private DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	
-	
-	
 	public Vacina(int idVacina, String nome, Pessoa pesquisadorResponsavel, LocalDate dataInicioPesquisa,
 			EstagioVacina estagioVacina, String nome_pais_origem) {
 		super();
@@ -80,6 +79,23 @@ public class Vacina {
 		this.idVacina = idVacina;
 	}
 
+	@Override
+	public String toString() {
+	
+		return "\nNome: " + this.getNome()
+			+ "\nPais: " + this.getNomePaisOrigem()
+			+ "\nData da Pesquisa: " + this.getDataInicioPesquisa().format(formatadorData)
+			+ "\nEstágio: " + this.getEstagioVacina()
+			+ "\nPesquisador Responsável: " + this.getPesquisadorResponsavel().getNome()
+			+ "\n============================="
+			;
+	}
+	
+	public String toStringReduzido() {
+		return "\nNome: " + this.getNome()
+		+ "\nPais: " + this.getNomePaisOrigem()
+		;
+	}
 
 	
 }

@@ -1,6 +1,7 @@
 package br.sc.senac.model.vo;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Pessoa {
@@ -13,6 +14,7 @@ public class Pessoa {
 	private CategoriaPessoa categoria;
 	private List<AplicacaoVacina> vacinacoes;
 	
+	private DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	public Pessoa(int idPessoa, String nome, String cpf, LocalDate dataNascimento, SexoPessoa sexo,
 			CategoriaPessoa categoria, List<AplicacaoVacina> vacinacoes) {

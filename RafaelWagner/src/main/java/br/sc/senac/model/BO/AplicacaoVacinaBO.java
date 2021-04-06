@@ -46,4 +46,11 @@ public class AplicacaoVacinaBO {
 		
 	}
 
+	public List<AplicacaoVacina> consultarAplicacaoPorIdVacina(int idVacina) {
+		AplicacaoDAO aplicacaoDAO = new AplicacaoDAO();
+		
+		return aplicacaoDAO.consultarAplicacaoVacinaPorIdVacina(idVacina);
+		
+	}
+
 }

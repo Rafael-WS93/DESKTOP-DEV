@@ -181,7 +181,7 @@ public class VacinaDAO {
 	public int excluirVacinaDAOByNomeEPais(Vacina vacina) {
 		int resultadoInt = 0;
 		
-		String sql = "DELETE FROM VACINA WHERE nome= ? and nome_pais_origem=?;";
+		String sql = "DELETE FROM VACINA WHERE UPPER(nome) = UPPER(?) AND UPPER(nome_pais_origem) = UPPER(?);";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
@@ -251,7 +251,7 @@ public class VacinaDAO {
 	}
 	
 	public Vacina ConsultarVacinaPorNomeEPais(Vacina vacina) {
-		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE nome= ? and nome_pais_origem=?;";
+		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE UPPER(nome) = UPPER(?) AND UPPER(nome_pais_origem) = UPPER(?);";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
