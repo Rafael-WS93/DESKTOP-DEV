@@ -6,27 +6,35 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
-import javax.swing.JRadioButton;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+import javax.swing.text.MaskFormatter;
+
+import br.sc.senac.model.vo.EstagioVacina;
+
+import java.awt.SystemColor;
+import java.text.ParseException;
+
+import javax.swing.DefaultComboBoxModel;
 
 public class TelaCadastroVacina {
 
-	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JFrame frmCadastroVacina;
+	private JTextField txtNomeVacina;
+	private JTextField txtPaisVacina;
+	private JTextField txtDataVacina;
+	private JTextField txtNomePesq;
+	private JTextField txtCpfPesq;
+	private JTextField txtNascPesq;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					TelaCadastroVacina window = new TelaCadastroVacina();
-					window.frame.setVisible(true);
+					window.frmCadastroVacina.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -34,102 +42,120 @@ public class TelaCadastroVacina {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+
 	public TelaCadastroVacina() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 485, 594);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Cadastro de Vacinas");
-		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 24));
-		lblNewLabel.setBounds(19, 11, 282, 46);
-		frame.getContentPane().add(lblNewLabel);
-		
-		JLabel lblNomeDaVacina = new JLabel("Nome da Vacina :");
-		lblNomeDaVacina.setFont(new Font("Arial", Font.BOLD, 14));
-		lblNomeDaVacina.setBounds(19, 68, 193, 17);
-		frame.getContentPane().add(lblNomeDaVacina);
-		
-		textField = new JTextField();
-		textField.setFont(new Font("Arial", Font.PLAIN, 14));
-		textField.setColumns(10);
-		textField.setBounds(19, 96, 297, 28);
-		frame.getContentPane().add(textField);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Nome do Pesquisador Responsável :");
-		lblNewLabel_1_1.setFont(new Font("Arial", Font.BOLD, 14));
-		lblNewLabel_1_1.setBounds(19, 147, 282, 17);
-		frame.getContentPane().add(lblNewLabel_1_1);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Arial", Font.PLAIN, 14));
-		textField_1.setColumns(10);
-		textField_1.setBounds(19, 175, 297, 28);
-		frame.getContentPane().add(textField_1);
-		
-		JLabel lblNewLabel_1_2 = new JLabel("Data de Início da pesquisa :");
-		lblNewLabel_1_2.setFont(new Font("Arial", Font.BOLD, 14));
-		lblNewLabel_1_2.setBounds(19, 224, 193, 17);
-		frame.getContentPane().add(lblNewLabel_1_2);
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Arial", Font.PLAIN, 14));
-		textField_2.setColumns(10);
-		textField_2.setBounds(19, 252, 297, 28);
-		frame.getContentPane().add(textField_2);
-		
-		JLabel lblNewLabel_1_3_1 = new JLabel("Selecione o Estágio :");
-		lblNewLabel_1_3_1.setFont(new Font("Arial", Font.BOLD, 14));
-		lblNewLabel_1_3_1.setBounds(19, 310, 207, 17);
-		frame.getContentPane().add(lblNewLabel_1_3_1);
-		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Inicial");
-		rdbtnNewRadioButton.setFont(new Font("Arial", Font.PLAIN, 14));
-		rdbtnNewRadioButton.setBounds(19, 334, 155, 38);
-		frame.getContentPane().add(rdbtnNewRadioButton);
-		
-		JRadioButton rdbtnTeste = new JRadioButton("Teste");
-		rdbtnTeste.setFont(new Font("Arial", Font.PLAIN, 14));
-		rdbtnTeste.setBounds(19, 375, 155, 38);
-		frame.getContentPane().add(rdbtnTeste);
-		
-		JRadioButton rdbtnAplicaaoEmMassa = new JRadioButton("Aplicaçao em massa");
-		rdbtnAplicaaoEmMassa.setFont(new Font("Arial", Font.PLAIN, 14));
-		rdbtnAplicaaoEmMassa.setBounds(19, 416, 155, 38);
-		frame.getContentPane().add(rdbtnAplicaaoEmMassa);
-		
-		JButton btnNewButton = new JButton("Cadastrar");
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnNewButton.addActionListener(new ActionListener() {
-			
-			
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		
-		
-		btnNewButton.setBounds(19, 481, 133, 38);
-		frame.getContentPane().add(btnNewButton);
-		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnCancelar.setBounds(168, 481, 133, 38);
-		frame.getContentPane().add(btnCancelar);
-		
-		JButton btnVoltar = new JButton("Voltar");
-		btnVoltar.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnVoltar.setBounds(314, 481, 133, 38);
-		frame.getContentPane().add(btnVoltar);
-	}
 
+	private void initialize() {
+		frmCadastroVacina = new JFrame();
+		frmCadastroVacina.setTitle("Cadastro Vacina");
+		frmCadastroVacina.setBounds(100, 100, 344, 520);
+		frmCadastroVacina.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmCadastroVacina.getContentPane().setLayout(null);
+		
+		JPanel pnlVacina = new JPanel();
+		pnlVacina.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		pnlVacina.setBackground(SystemColor.menu);
+		pnlVacina.setBounds(10, 190, 308, 276);
+		frmCadastroVacina.getContentPane().add(pnlVacina);
+		pnlVacina.setLayout(null);
+		
+		JLabel lblNome = new JLabel("NOME");
+		lblNome.setBounds(10, 11, 64, 14);
+		pnlVacina.add(lblNome);
+		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		txtNomeVacina = new JTextField();
+		txtNomeVacina.setBounds(10, 34, 288, 20);
+		pnlVacina.add(txtNomeVacina);
+		txtNomeVacina.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtNomeVacina.setColumns(10);
+		
+		JLabel lblPaisDeOrigem = new JLabel("PAÍS DE ORIGEM");
+		lblPaisDeOrigem.setBounds(10, 78, 198, 14);
+		pnlVacina.add(lblPaisDeOrigem);
+		lblPaisDeOrigem.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		txtPaisVacina = new JTextField();
+		txtPaisVacina.setBounds(10, 103, 288, 20);
+		pnlVacina.add(txtPaisVacina);
+		txtPaisVacina.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtPaisVacina.setColumns(10);
+		
+		JLabel lblDataDeIncio = new JLabel("DATA DE INÌCIO DA PESQUISA");
+		lblDataDeIncio.setBounds(10, 146, 198, 14);
+		pnlVacina.add(lblDataDeIncio);
+		lblDataDeIncio.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		try {
+			MaskFormatter data = new MaskFormatter("##/##/####");
+			txtDataVacina = new JFormattedTextField(data);
+		} catch (ParseException e) {
+			txtDataVacina = new JTextField();
+		}
+		txtDataVacina.setBounds(10, 169, 288, 20);
+		pnlVacina.add(txtDataVacina);
+		txtDataVacina.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtDataVacina.setColumns(10);
+
+		
+		
+		JLabel lblEstgioDaPesquisa = new JLabel("ESTÁGIO DA PESQUISA");
+		lblEstgioDaPesquisa.setBounds(10, 213, 152, 14);
+		pnlVacina.add(lblEstgioDaPesquisa);
+		lblEstgioDaPesquisa.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JComboBox cbEstagioPesq = new JComboBox();
+		cbEstagioPesq.setModel(new DefaultComboBoxModel(new String[] {EstagioVacina.INICIAL.name(), EstagioVacina.TESTE.name(), EstagioVacina.APLICACAO_EM_MASSA.name().replace('_', ' ')}));
+		cbEstagioPesq.setBounds(10, 238, 198, 20);
+		pnlVacina.add(cbEstagioPesq);
+		cbEstagioPesq.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JPanel pnlPesquisador = new JPanel();
+		pnlPesquisador.setBackground(SystemColor.menu);
+		pnlPesquisador.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		pnlPesquisador.setBounds(10, 11, 308, 168);
+		frmCadastroVacina.getContentPane().add(pnlPesquisador);
+		pnlPesquisador.setLayout(null);
+		
+		JLabel lblDataDeNascimento = new JLabel("DATA DE NASCIMENTO");
+		lblDataDeNascimento.setBounds(10, 118, 198, 14);
+		pnlPesquisador.add(lblDataDeNascimento);
+		lblDataDeNascimento.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JLabel lblCpf = new JLabel("CPF");
+		lblCpf.setBounds(10, 62, 198, 14);
+		pnlPesquisador.add(lblCpf);
+		lblCpf.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JLabel lblPesquisadorResponsvel = new JLabel("PESQUISADOR RESPONSÁVEL");
+		lblPesquisadorResponsvel.setBounds(10, 11, 198, 14);
+		pnlPesquisador.add(lblPesquisadorResponsvel);
+		lblPesquisadorResponsvel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		txtNomePesq = new JTextField();
+		txtNomePesq.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtNomePesq.setColumns(10);
+		txtNomePesq.setBounds(10, 31, 288, 20);
+		pnlPesquisador.add(txtNomePesq);
+		
+		txtCpfPesq = new JTextField();
+		txtCpfPesq.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtCpfPesq.setColumns(10);
+		txtCpfPesq.setBounds(10, 87, 288, 20);
+		pnlPesquisador.add(txtCpfPesq);
+		
+		try {
+			MaskFormatter data = new MaskFormatter("##/##/####");
+			txtNascPesq = new JFormattedTextField(data);
+		} catch (ParseException e) {
+			txtNascPesq = new JTextField();
+		}
+		txtNascPesq.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtNascPesq.setColumns(10);
+		txtNascPesq.setBounds(10, 137, 288, 20);
+		pnlPesquisador.add(txtNascPesq);
+	}
 }
