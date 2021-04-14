@@ -204,7 +204,7 @@ public class CadastroVacina {
 		return vacina;
 	}
 	
-	private Vacina menuCadastrarNovoPesquisador(Vacina vacina, VacinaController controller) {
+	public Vacina menuCadastrarNovoPesquisador(Vacina vacina, VacinaController controller) {
 		String title = "Cadastro novo pesquisador";
 		Pessoa pesquisador = new Pessoa();
 
