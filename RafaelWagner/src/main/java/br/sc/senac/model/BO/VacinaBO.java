@@ -2,19 +2,27 @@ package br.sc.senac.model.BO;
 
 import java.util.List;
 
+import br.sc.senac.exception.CampoInvalidoVacina;
 import br.sc.senac.exception.NomeVacinaIndisponivelException;
 import br.sc.senac.model.DAO.VacinaDAO;
 import br.sc.senac.model.vo.Vacina;
 
 public class VacinaBO {
 	
-	public String cadastrarVacinaBO(Vacina vacina) throws NomeVacinaIndisponivelException {
+	public String cadastrarVacinaBO(Vacina vacina) throws NomeVacinaIndisponivelException, CampoInvalidoVacina {
+		
+		String dadosVerificados = verificarCamposVacinaBO(vacina);
+		
+		if (verificarCamposVacinaBO(vacina) != null) {
+			throw new CampoInvalidoVacina(verificarCamposVacinaBO(vacina));
+		}
+		
 		
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
+
+		
 		Vacina vacinaConsulta = vacinaDAO.ConsultarVacinaPorNomeEPais(vacina);
-		
-		
 
 			
 			if ( vacinaConsulta != null) {
@@ -34,7 +42,15 @@ public class VacinaBO {
 
 
 
-	public String atualizarVacinaBO(Vacina vacina) {
+	public String atualizarVacinaBO(Vacina vacina) throws CampoInvalidoVacina {
+		
+		String dadosVerificados = verificarCamposVacinaBO(vacina);
+		
+		if (verificarCamposVacinaBO(vacina) != null) {
+			throw new CampoInvalidoVacina(verificarCamposVacinaBO(vacina));
+		}
+		
+		
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
 		if(vacinaDAO.atualizarVacinaDAO(vacina) == 1) {
@@ -85,6 +101,36 @@ public class VacinaBO {
 		return vacinaDAO.ConsultarVacinaPorNomeEPais(vacina);
 	
 		
+	}
+	
+	private String verificarCamposVacinaBO(Vacina vacina) {
+		
+		String resultado = "";
+		
+		
+		if(vacina.getNome() == null || vacina.getNome().contentEquals("")) {
+			resultado += "Nome ;";
+		}
+		
+		if(vacina.getNomePaisOrigem() ==null || vacina.getNomePaisOrigem().contentEquals("")) {
+			resultado += "Pais de Origem ;";
+		}
+		
+		if(vacina.getDataInicioPesquisa() ==null) {
+			resultado += "Data de início da pesquisa ;";
+		}
+		
+		if(vacina.getPesquisadorResponsavel() ==null || vacina.getPesquisadorResponsavel().getCpf() == null) {
+			resultado += "Pesquisador Responsável ;";
+		}
+		
+		if(vacina.getEstagioVacina() ==null ) {
+			resultado += "Estágio da vacina ;";
+		}
+		
+		if (resultado != "") {
+			return "Faltaram os campos:\n" + resultado.substring(0, resultado.length()-2) +".";
+		} else return null;
 	}
 
 }

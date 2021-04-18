@@ -1,5 +1,6 @@
 package br.sc.senac.view;
 
+import java.awt.HeadlessException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -9,6 +10,8 @@ import javax.swing.JOptionPane;
 
 import br.sc.senac.controller.PessoaController;
 import br.sc.senac.controller.VacinaController;
+import br.sc.senac.exception.CampoInvalidoVacina;
+import br.sc.senac.exception.CamposInvalidosPessoa;
 import br.sc.senac.exception.CpfIndisponivelException;
 import br.sc.senac.exception.NomeVacinaIndisponivelException;
 import br.sc.senac.exception.PessoaNaoPesquisador;
@@ -17,7 +20,7 @@ import br.sc.senac.model.vo.EstagioVacina;
 import br.sc.senac.model.vo.Pessoa;
 import br.sc.senac.model.vo.SexoPessoa;
 import br.sc.senac.model.vo.Vacina;
-
+@Deprecated
 public class CadastroVacina {
 	
 	DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -108,7 +111,9 @@ public class CadastroVacina {
 			JOptionPane.showMessageDialog(null, controller.cadastrarVacinaController(vacina));
 		} catch (NomeVacinaIndisponivelException e) {
 			e.getMessage();
-		}
+		} catch (CampoInvalidoVacina e) {
+			e.getMessage();
+		} 
 
 
 
@@ -169,7 +174,7 @@ public class CadastroVacina {
 		}
 	
 		try {
-			pesquisador = controller.consultarPesquisadorController(pesquisador);
+			pesquisador = controller.validarPesquisadorController(pesquisador);
 		} catch (PessoaNaoPesquisador e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
@@ -245,6 +250,9 @@ public class CadastroVacina {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			
 			this.menuConsultarPesquisador(vacina, controller);
+		} catch (CamposInvalidosPessoa e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return vacina;

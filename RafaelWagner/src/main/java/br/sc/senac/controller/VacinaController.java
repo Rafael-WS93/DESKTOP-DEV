@@ -2,6 +2,7 @@ package br.sc.senac.controller;
 
 import java.util.List;
 
+import br.sc.senac.exception.CampoInvalidoVacina;
 import br.sc.senac.exception.NomeVacinaIndisponivelException;
 import br.sc.senac.exception.PessoaNaoPesquisador;
 import br.sc.senac.model.BO.AplicacaoVacinaBO;
@@ -13,22 +14,17 @@ import br.sc.senac.model.vo.Vacina;
 
 public class VacinaController {
 	
-	public String cadastrarVacinaController(Vacina vacina) throws NomeVacinaIndisponivelException{
+	public String cadastrarVacinaController(Vacina vacina) throws NomeVacinaIndisponivelException, CampoInvalidoVacina{
 
-		String msg = this.confirmarTodosCamposVacina(vacina);
-		
-		if (msg == null) {
+
 			VacinaBO vacinaBO = new VacinaBO();
 			return vacinaBO.cadastrarVacinaBO(vacina);
-		} else {
-			
-			return msg;
-		}
+
 		
 
 	}
 	
-	public Pessoa consultarPesquisadorController(Pessoa pesquisador) throws PessoaNaoPesquisador {
+	public Pessoa validarPesquisadorController(Pessoa pesquisador) throws PessoaNaoPesquisador {
 		PessoaBO pessoaBO = new PessoaBO();
 		
 		Pessoa consulta = pessoaBO.consultarPessoarPorCpfBO(pesquisador.getCpf());
@@ -45,17 +41,13 @@ public class VacinaController {
 		return pesquisador;
 	}
 	
-	public String atualizarVacinaController(Vacina vacina) throws NomeVacinaIndisponivelException {
-		String msg = this.confirmarTodosCamposVacina(vacina);
-		
-		if (msg == null) {
+	public String atualizarVacinaController(Vacina vacina) throws NomeVacinaIndisponivelException, CampoInvalidoVacina {
+
 			VacinaBO vacinaBO = new VacinaBO();
 			
 			return vacinaBO.cadastrarVacinaBO(vacina);
-		} else {
-			
-			return msg;
-		}
+
+
 		
 	}
 	
@@ -67,17 +59,7 @@ public class VacinaController {
 	}
 	
 	public String excluirVacina(Vacina vacina) {
-		String msg = null;
-		
-		if (vacina.getNome() == null) {
-			msg = " Nome";
-		}
-		
-		if (vacina.getNomePaisOrigem() == null) {
-			msg = " Pais de Origem";
-		}
-		
-			if (msg == null) {
+
 				VacinaBO vacinaBO = new VacinaBO();
 				vacina = vacinaBO.consultarVacinaPorNomeEPais(vacina);
 				
@@ -93,43 +75,14 @@ public class VacinaController {
 				} else {
 					return "Vacina não cadastrada.";
 				}
-			
 
-		} else {
-			
-			
-			return "Faltaram os campos:" + msg;
-		}
 		
 	}
 	
-	private String confirmarTodosCamposVacina(Vacina vacina) {
-		String camposRestantes = "";
-		
-		
-		if(vacina.getNome() == null || vacina.getNome().contentEquals("")) {
-			camposRestantes += "/nNome";
-		}
-		
-		if(vacina.getNomePaisOrigem() ==null || vacina.getNomePaisOrigem().contentEquals("")) {
-			camposRestantes += "/nPais de Origem";
-		}
-		
-		if(vacina.getDataInicioPesquisa() ==null) {
-			camposRestantes += "/nData de início da pesquisa";
-		}
-		
-		if(vacina.getPesquisadorResponsavel() ==null || vacina.getPesquisadorResponsavel().getCpf() == null) {
-			camposRestantes += "/nPesquisador Responsável";
-		}
-		
-		if(vacina.getEstagioVacina() ==null ) {
-			camposRestantes += "/nEstágio da vacina";
-		}
-		
-		if (camposRestantes != "") {
-			return "Faltaram os campos " + camposRestantes;
-		} else return null;
+
+	public Object atualizarvacinaController(Vacina vacinaAtualizar) throws CampoInvalidoVacina {
+		VacinaBO vacinaBO = new VacinaBO();
+		return vacinaBO.atualizarVacinaBO(vacinaAtualizar);
 	}
 
 

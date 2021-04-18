@@ -2,14 +2,21 @@ package br.sc.senac.model.BO;
 
 import java.util.List;
 
+import br.sc.senac.exception.CamposInvalidosPessoa;
 import br.sc.senac.exception.CpfIndisponivelException;
 import br.sc.senac.model.DAO.PessoaDAO;
 import br.sc.senac.model.vo.Pessoa;
 
 public class PessoaBO {
 	
-	public String cadastrarPessoaBO(Pessoa pessoa) throws CpfIndisponivelException{
+	public String cadastrarPessoaBO(Pessoa pessoa) throws CpfIndisponivelException, CamposInvalidosPessoa{
 		PessoaDAO pessoaDAO = new PessoaDAO();
+		
+		String dadosVerificados = verificarDadosPessoaBO(pessoa);
+		
+		if (dadosVerificados != null) {
+			throw new CamposInvalidosPessoa(dadosVerificados);
+		}
 		
 		if (pessoaDAO.consultarPessoaPorCpfDAO(pessoa.getCpf()).getIdPessoa() != 0) {
 			throw new CpfIndisponivelException("O CPF já está sendo utilizado.");
@@ -26,6 +33,8 @@ public class PessoaBO {
 
 	}
 	
+
+
 	public String atualizarPessoaBO(Pessoa pessoa) throws CpfIndisponivelException{
 		PessoaDAO pessoaDAO = new PessoaDAO();
 		
@@ -82,6 +91,36 @@ public class PessoaBO {
 		
 		
 		
+	}
+	
+	private String verificarDadosPessoaBO(Pessoa pessoa) {
+		
+		String resultado = "";
+		
+		if(pessoa.getNome() == null || pessoa.getNome().equals("") ) {
+			resultado += "Nome ;";
+		}
+		
+		if (pessoa.getCpf() == null || !pessoa.getCpf().matches("^[1-9]{11}")) {
+			resultado += "CPF ;";
+		}
+		
+		if (pessoa.getCategoria() == null) {
+			resultado += "Categoria ;";
+		}
+		
+		if (pessoa.getSexo() == null) {
+			resultado += "Sexo ;";
+		}
+		
+		if (resultado.equals("")) {
+			return null;
+		} else {
+			return "Restaram os campos:\n" + resultado.substring(0, resultado.length()-2) + ".";
+		}
+
+		
+
 	}
 
 }

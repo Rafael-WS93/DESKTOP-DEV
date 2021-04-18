@@ -1,19 +1,14 @@
 package br.sc.senac.executavel;
 
-import javax.swing.JOptionPane;
 
-import br.sc.senac.model.DAO.PessoaDAO;
-import br.sc.senac.view.CadastroVacina;
+import br.sc.senac.view.TelaBoasVindas;
 
 public class Exec {
 	
 	public static void main (String[] args) {
 		
+TelaBoasVindas telaBoasVindas = new TelaBoasVindas();
+telaBoasVindas.getFrmBemVindo().setVisible(true);
 
-	
-		CadastroVacina cadastroVacina = new CadastroVacina();
-		cadastroVacina.menuVacina();
-		
-	}
-
+}
 }
