@@ -78,6 +78,7 @@ public class TelaListaVacinas {
 	 */
 	private void initialize() {
 		frmTelaListaVacinas = new JFrame();
+		frmTelaListaVacinas.setTitle("LISTA DE VACINAS");
 		frmTelaListaVacinas.setBounds(100, 100, 626, 609);
 		frmTelaListaVacinas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTelaListaVacinas.getContentPane().setLayout(null);

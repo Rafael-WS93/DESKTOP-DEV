@@ -100,8 +100,6 @@ public class VacinaDAO {
 				
 				vacina= this.converterRsToVacina(rs);
 				
-			} else {
-				System.out.println("Ocorrencia não existe");
 			}
 			
 		} catch (SQLException e) {
@@ -229,8 +227,6 @@ public class VacinaDAO {
 				
 				vacina = converterRsToVacina(rs);
 				
-			} else {
-				System.out.println("Ocorrencia não existe");
 			}
 			
 		} catch (SQLException e) {
@@ -270,7 +266,6 @@ public class VacinaDAO {
 				vacina = converterRsToVacina(rs);
 				
 			} else {
-				System.out.println("Ocorrencia não existe");
 				vacina = null;
 			}
 			

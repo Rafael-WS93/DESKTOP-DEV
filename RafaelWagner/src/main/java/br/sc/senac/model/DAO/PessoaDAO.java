@@ -203,10 +203,7 @@ public List<Pessoa> consultarTodasPessoasDAO() {
 			
 			if(rs.next()) {
 				pessoa = converterRS(rs);
-			} else {
-				System.out.println("Ocorrencia não existe");
-			}
-			
+			}			
 
 			
 		} catch (SQLException e) {

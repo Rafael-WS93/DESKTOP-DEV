@@ -246,6 +246,7 @@ public class TelaCadastroVacina {
 		JButton btnMenuPrinc = new JButton("MENU PRINCIPAL");
 		btnMenuPrinc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				TelaBoasVindas telaBoasVindas = new TelaBoasVindas();
 				telaBoasVindas.getFrmBemVindo().setVisible(true);
 				getFrmCadastroVacina().dispose();
@@ -265,10 +266,16 @@ public class TelaCadastroVacina {
 				if (vacinaAtualizar != null) {
 					vacinaAtualizar.setIdVacina(getVacina().getIdVacina());
 					
-					VacinaController vacinaController = new VacinaController();
+
 					
 					try {
+						VacinaController vacinaController = new VacinaController();
 						JOptionPane.showMessageDialog(null, vacinaController.atualizarvacinaController(vacinaAtualizar), "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						
+						TelaBoasVindas telaBoasVindas = new TelaBoasVindas();
+						telaBoasVindas.getFrmBemVindo().setVisible(true);
+						getFrmCadastroVacina().dispose();
+						
 					} catch (CampoInvalidoVacina exceptionCadastro) {
 						JOptionPane.showMessageDialog(null, exceptionCadastro.getMessage(), "AVISO",JOptionPane.WARNING_MESSAGE);
 					}
@@ -291,6 +298,11 @@ public class TelaCadastroVacina {
 					try {
 						VacinaController vacinaController = new VacinaController();
 						JOptionPane.showMessageDialog(null, vacinaController.cadastrarVacinaController(cadastroVacina), "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						
+						TelaBoasVindas telaBoasVindas = new TelaBoasVindas();
+						telaBoasVindas.getFrmBemVindo().setVisible(true);
+						getFrmCadastroVacina().dispose();
+						
 					} catch (NomeVacinaIndisponivelException exceptionVacina) {
 						JOptionPane.showMessageDialog(null, exceptionVacina.getMessage(), "AVISO",JOptionPane.WARNING_MESSAGE);
 					} catch (CampoInvalidoVacina exceptionCadastro) {

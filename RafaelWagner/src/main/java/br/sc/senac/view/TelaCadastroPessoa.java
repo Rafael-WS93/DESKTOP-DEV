@@ -213,9 +213,15 @@ public class TelaCadastroPessoa {
 				
 				if (pessoaAtualizacao != null) {
 					
-					PessoaController pessoaController = new PessoaController();
+
 					try {
+						PessoaController pessoaController = new PessoaController();
 						JOptionPane.showMessageDialog(null, pessoaController.atualizarPessoaController(pessoaAtualizacao), "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						
+						TelaBoasVindas telaboasVindas = new TelaBoasVindas();
+						telaboasVindas.getFrmBemVindo().setVisible(true);
+						getFrmCadastroPessoa().dispose();
+						
 					} catch (CpfIndisponivelException exceptionAtualizar) {
 						JOptionPane.showMessageDialog(null, exceptionAtualizar.getMessage(), "AVISO", JOptionPane.WARNING_MESSAGE);	
 					}
@@ -240,7 +246,12 @@ public class TelaCadastroPessoa {
 					
 					try {
 						PessoaController pessoaController = new PessoaController();
-						JOptionPane.showMessageDialog(null, pessoaController.cadastrarPessoaController(pessoaCadastro), "AVISO", JOptionPane.INFORMATION_MESSAGE); 
+						JOptionPane.showMessageDialog(null, pessoaController.cadastrarPessoaController(pessoaCadastro), "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						
+						TelaBoasVindas telaboasVindas = new TelaBoasVindas();
+						telaboasVindas.getFrmBemVindo().setVisible(true);
+						getFrmCadastroPessoa().dispose();
+						
 					} catch (CpfIndisponivelException exceptionCpf) {
 						JOptionPane.showMessageDialog(null, exceptionCpf.getMessage(), "AVISO", JOptionPane.WARNING_MESSAGE);
 					} catch (CamposInvalidosPessoa exceptionCadastro) {
