@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.sc.senac.model.seletor.SeletorVacina;
 import br.sc.senac.model.vo.EstagioVacina;
 import br.sc.senac.model.vo.Vacina;
 
@@ -284,6 +285,21 @@ public class VacinaDAO {
 		
 		
 		return vacina;
+		
+	}
+	
+	public List<Vacina> pesquisasVacinas (SeletorVacina vacina, String sql) {
+		
+		sql += "WHERE";
+		
+		if (vacina.getIdVacina() > 0) {
+			sql += "idvacina = " + vacina.getIdVacina();
+		}
+		
+		if (vacina.getDataInicioPesquisa() ! null)
+		
+		
+		return null;
 		
 	}
 	
