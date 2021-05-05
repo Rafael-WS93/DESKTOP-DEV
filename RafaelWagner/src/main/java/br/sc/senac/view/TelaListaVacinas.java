@@ -41,9 +41,13 @@ public class TelaListaVacinas {
 	
 	private JButton btnExcluir;
 	private JButton btnEditar;
+	private JButton btnAvancar;
+	private JButton btnVoltar;
 	
 	private List<Vacina> vacinas;
 	private Vacina vacina;
+	private SeletorVacina pesquisa;
+	private int paginaLista = 1;
 	
 	private JLabel lblNomeSelecionado;
 	private JLabel lblPaisSelecionado;
@@ -71,6 +75,11 @@ public class TelaListaVacinas {
 	private JLabel lblDe;
 	private JLabel lblAt;
 	private JTextField txtDataLimite;
+
+
+	
+
+	
 	/**
 	 * Launch the application.
 	 */
@@ -147,8 +156,8 @@ public class TelaListaVacinas {
 		
 		
 		
-		JButton btnConsultar = new JButton("CONSULTAR");
-		btnConsultar.setBounds(452, 11, 122, 32);
+		JButton btnConsultar = new JButton("CONSULTAR TODAS");
+		btnConsultar.setBounds(393, 11, 181, 32);
 		panelTabela.add(btnConsultar);
 		btnConsultar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
@@ -217,7 +226,7 @@ public class TelaListaVacinas {
 			}
 		});
 		btnMenuPrinc.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnMenuPrinc.setBounds(295, 11, 147, 30);
+		btnMenuPrinc.setBounds(236, 12, 147, 30);
 		panelTabela.add(btnMenuPrinc);
 		
 		JPanel panelVacina = new JPanel();
@@ -350,7 +359,7 @@ public class TelaListaVacinas {
 			public void actionPerformed(ActionEvent e) {
 				
 				
-				SeletorVacina pesquisa = preencherVacinaSeletor();
+				pesquisa = preencherVacinaSeletor();
 				
 				if (pesquisa.getNome().isEmpty() 
 						&& pesquisa.getNomePaisOrigem().isEmpty()
@@ -372,6 +381,34 @@ public class TelaListaVacinas {
 		btnFiltrar.setEnabled(true);
 		btnFiltrar.setBounds(511, 125, 152, 51);
 		frmTelaListaVacinas.getContentPane().add(btnFiltrar);
+		
+		btnVoltar = new JButton("<< voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				setPaginaLista(getPaginaLista() -1);
+				atualizarTabelaVacinas(pesquisa, paginaLista - 1);
+			}
+		});
+		btnVoltar.setEnabled(false);
+		btnVoltar.setBounds(167, 518, 89, 23);
+		frmTelaListaVacinas.getContentPane().add(btnVoltar);
+		
+		btnAvancar = new JButton("avancar >>");
+		btnAvancar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setPaginaLista(getPaginaLista() + 1);
+				
+				atualizarTabelaVacinas(pesquisa, paginaLista - 1);
+			}
+
+
+		});
+		btnAvancar.setEnabled(false);
+		btnAvancar.setBounds(284, 518, 106, 23);
+		frmTelaListaVacinas.getContentPane().add(btnAvancar);
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -405,6 +442,14 @@ public class TelaListaVacinas {
 			model.addRow(novaLinhaTabela);
 		}
 		
+		
+		if (vacinas.size() > 10) {
+			btnAvancar.setEnabled(true);
+		}
+		
+		setPaginaLista(1);
+		
+		
 	}
 	
 	// TODO organizar OVERFLOW
@@ -417,6 +462,7 @@ public class TelaListaVacinas {
 
 		DefaultTableModel model = (DefaultTableModel) this.tableVacinas.getModel();
 		
+		
 		for(Vacina vac: vacinas) {
 			Object[] novaLinhaTabela = new Object[5];
 			
@@ -428,6 +474,19 @@ public class TelaListaVacinas {
 			
 			model.addRow(novaLinhaTabela);
 		}
+		
+		if (vacinas.size() > 10) {
+			btnAvancar.setEnabled(true);
+		}
+		
+		setPaginaLista(1);
+		
+	}
+	
+	// TODO organizar OVERFLOW
+	private void atualizarTabelaVacinas(SeletorVacina pesquisa, int paginaLista) {
+		
+		
 		
 	}
 	
@@ -448,12 +507,14 @@ public class TelaListaVacinas {
 			novaVacina.setDataInicioPesquisa(LocalDate.parse(txtDataVacina.getText(), formatadorData));
 		} catch (DateTimeParseException e) {
 			novaVacina.setDataInicioPesquisa(null);
+			txtDataVacina.setText(null);
 		}
 		
 		try {
 			novaVacina.setDataLimite(LocalDate.parse(txtDataLimite.getText(), formatadorData));
 		} catch (DateTimeParseException e) {
 			novaVacina.setDataLimite(null);
+			txtDataLimite.setText(null);
 		}
 		
 		EstagioVacina[] estagios = {EstagioVacina.INICIAL ,EstagioVacina.TESTE ,EstagioVacina.APLICACAO_EM_MASSA, null};
@@ -463,7 +524,7 @@ public class TelaListaVacinas {
 		//novaVacina.setPesquisadorResponsavel(vacina.getPesquisadorResponsavel());
 
 		novaVacina.setEstagioVacina(estagios[cbEstagioPesq.getSelectedIndex()]);
-		
+		novaVacina.setPagina(paginaLista);
 		
 		return novaVacina;
 	}
@@ -479,4 +540,14 @@ public class TelaListaVacinas {
 	public JFrame getFrmTelaListaVacinas() {
 		return frmTelaListaVacinas;
 	}
+
+	public int getPaginaLista() {
+		return paginaLista;
+	}
+
+	public void setPaginaLista(int paginaLista) {
+		this.paginaLista = paginaLista;
+	}
+	
+	
 }

@@ -7,6 +7,9 @@ import br.sc.senac.model.vo.Vacina;
 public class SeletorVacina extends Vacina{
 	
 	private LocalDate dataLimite;
+	
+	private int limiteOffset;
+	private int pagina;
 
 
 	public SeletorVacina() {
@@ -57,6 +60,23 @@ public class SeletorVacina extends Vacina{
 	public void setDataLimite(LocalDate dataLimite) {
 		this.dataLimite = dataLimite;
 	}
+
+
+	public int getLimiteOffset() {
+		return limiteOffset;
+	}
+
+
+	public int getPagina() {
+		return pagina;
+	}
+
+	public void setPagina(int pagina) {
+		this.pagina = pagina;
+		this.limiteOffset = this.pagina * 10;
+	}
+	
+	
 	
 	
 

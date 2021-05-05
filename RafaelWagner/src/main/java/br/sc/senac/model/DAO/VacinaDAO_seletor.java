@@ -210,6 +210,8 @@ public class VacinaDAO_seletor {
 				consulta += "inicio_pesquisa <= '" + vacina.getDataLimite() + "' AND ";
 			}
 		}
+		
+		consulta += "LIMIT " + vacina.getLimiteOffset() + "," + 10;
 
 		
 		return consulta.substring(0, consulta.length() - 4);
