@@ -336,7 +336,7 @@ public class TelaCadastroPessoa {
 			return null;
 		}
 		
-		novaPessoa.setNome(txtNome.getText());
+		novaPessoa.setNome(txtNome.getText().trim());
 		
 		String cpfUnformatted = txtCpf.getText().replace(".", "");
 		cpfUnformatted = cpfUnformatted.replace("-", "");

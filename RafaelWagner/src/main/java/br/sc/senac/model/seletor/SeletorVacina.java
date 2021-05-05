@@ -14,39 +14,39 @@ public class SeletorVacina extends Vacina{
 	}
 	
 	
-	public boolean temfiltro() {
-		boolean temFiltro = false;
+	public String filtro() {
+		String filtros = "";
 		
 		if (this.getIdVacina() > 0) {
-			temFiltro = true;
+			filtros += "ID - ";
 		}
 		
 		if (this.getDataInicioPesquisa() != null) {
-			temFiltro = true;
+			filtros += "DATA_INICIO - ";
 		}
 		
 		if (this.getEstagioVacina() != null) {
-			temFiltro = true;
+			filtros += "ESTAGIO - ";
 		}
 		
 		if (this.getDataLimite() != null) {
-			temFiltro = true;
+			filtros += "DATA_LIMITE - ";
 		}
 		
 		if (this.getNome() != null && this.getNome().length() > 0) {
-			temFiltro = true;
+			filtros += "NOME - ";
 		}
 		
 		if (this.getNomePaisOrigem() != null && this.getNomePaisOrigem().length() > 0) {
-			temFiltro = true;
+			filtros += "PAIS - ";
 		}
 		
-		if (this.getPesquisadorResponsavel().getNome() != null && this.getPesquisadorResponsavel().getNome().length() > 0) {
-			temFiltro = true;
-		}
+//		if (this.getPesquisadorResponsavel().getNome() != null && this.getPesquisadorResponsavel().getNome().length() > 0) {
+//			filtros = "PESQUISADOR - ";
+//		}
 
 		
-		return temFiltro;			
+		return filtros;			
 	}
 	
 

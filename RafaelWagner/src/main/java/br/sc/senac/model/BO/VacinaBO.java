@@ -5,6 +5,8 @@ import java.util.List;
 import br.sc.senac.exception.CampoInvalidoVacina;
 import br.sc.senac.exception.NomeVacinaIndisponivelException;
 import br.sc.senac.model.DAO.VacinaDAO;
+import br.sc.senac.model.DAO.VacinaDAO_seletor;
+import br.sc.senac.model.seletor.SeletorVacina;
 import br.sc.senac.model.vo.Vacina;
 
 public class VacinaBO {
@@ -131,6 +133,13 @@ public class VacinaBO {
 		if (resultado != "") {
 			return "Faltaram os campos:\n" + resultado.substring(0, resultado.length()-2) +".";
 		} else return null;
+	}
+
+
+	// TODO ORGANIZAR OVERFLOW
+	public List<Vacina> consultarTodasVacinasBO(SeletorVacina pesquisa) {
+		VacinaDAO_seletor vacinaDAO = new VacinaDAO_seletor();
+		return vacinaDAO.pesquisarListaVacinas(pesquisa);
 	}
 
 }

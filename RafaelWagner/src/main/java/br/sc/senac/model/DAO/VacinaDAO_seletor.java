@@ -13,9 +13,9 @@ import br.sc.senac.model.seletor.SeletorVacina;
 import br.sc.senac.model.vo.EstagioVacina;
 import br.sc.senac.model.vo.Vacina;
 
-public class VacinaDAO {
+public class VacinaDAO_seletor {
 	
-	private static final String QUERY_LISTA = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA";
+	private static final String QUERY_LISTA = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA ";
 	
 	public int cadastrarVacinaDAO (Vacina vacina){
 		int resultadoInt = 0;
@@ -81,75 +81,7 @@ public class VacinaDAO {
 		
 		return resultadoInt;
 	}
-	
-	public Vacina consultaVacinaPorIdDAO(Integer id) {
-		
-		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE IDVACINA= ? ;";
-		
-	
-		Vacina vacina = new Vacina();
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-			
-		ResultSet rs = null;
-		try {
-			
-			
-			stmt.setString(1, id.toString());
-			
-			rs = stmt.executeQuery();
-			
-			if(rs.next()) {
-				
-				vacina= this.converterRsToVacina(rs);
-				
-			}
-			
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		return vacina;
 
-
-	}
-	
-	public List<Vacina> consultarTodasVacinasDAO() {
-		
-		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA;";
-		
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		
-		ResultSet rs = null;
-		
-		List<Vacina> listaVacinas = new ArrayList<Vacina>();
-		try {	
-			rs = stmt.executeQuery(sql);
-			while(rs.next()) {
-				
-				listaVacinas.add(this.converterRsToVacina(rs));
-			}
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return listaVacinas;
-		
-		
-	}
-	
 	public int excluirVacinaDAOById(int id) {
 		int resultadoInt = 0;
 		
@@ -209,88 +141,80 @@ public class VacinaDAO {
 		
 		return resultadoInt;
 	}
-
-	public Vacina ConsultarVacinaPorNomeDAO(String nome) {
-		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE nome= ? ;";
-		
-		
-		Vacina vacina = new Vacina();
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-			
-		ResultSet rs = null;
-		try {
-			
-			
-			stmt.setString(1, nome);
-			
-			rs = stmt.executeQuery();
-			
-			if(rs.next()) {
-				
-				vacina = converterRsToVacina(rs);
-				
-			}
-			
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		return vacina;
-
-	}
 	
-	public Vacina ConsultarVacinaPorNomeEPais(Vacina vacina) {
-		String sql = "SELECT idvacina ,nome ,IDPESQUISADOR ,inicio_pesquisa ,estagio ,nome_pais_origem FROM VACINA WHERE UPPER(nome) = UPPER(?) AND UPPER(nome_pais_origem) = UPPER(?);";
+
+
+	public List<Vacina> pesquisarListaVacinas (SeletorVacina vacina) {
+		String query = QUERY_LISTA;
+		String filtros = vacina.filtro();
+		
+		if (!filtros.isEmpty()) {
+			query += pesquisarComFiltro(vacina, filtros);
+		} 
 		
 		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-			
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
 		ResultSet rs = null;
+		
+		List<Vacina> listaVacinas = new ArrayList<Vacina>();
 		try {
-			
-			
-			stmt.setString(1, vacina.getNome());
-			stmt.setString(2, vacina.getNomePaisOrigem());
-			
 			rs = stmt.executeQuery();
 			
-			if(rs.next()) {
-				
-				vacina = converterRsToVacina(rs);
-				
-			} else {
-				vacina = null;
-			}
+	
 			
+			while (rs.next()) {
+
+				listaVacinas.add(converterRsToVacina(rs));
+				
+			}
+			return listaVacinas;
+
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		
-		return vacina;
+
+		return listaVacinas;
 		
 	}
 	
-	
+	private String pesquisarComFiltro(SeletorVacina vacina, String filtros) {
+		String consulta = "WHERE ";
+		
+		if (filtros.contains("ID") && filtros.length() == 1) {
+			consulta += "ID = " + vacina.getIdVacina() + " AND ";
+		} else {
+			if (filtros.contains("NOME")) {
+				consulta += "NOME = '" + vacina.getNome()	 + "' AND ";
+			}
+			
+			if (filtros.contains("PAIS")) {
+				consulta += "nome_pais_origem = '" + vacina.getNomePaisOrigem() + "' AND ";
+			}
+			
+			if (filtros.contains("ESTAGIO")) {
+				consulta += "ESTAGIO = '" + vacina.getEstagioVacina().toString() + "' AND ";
+			}
+			
+			// TODO CONSULTA PESQUISADOR
+//			if (filtros.contains("PESQUISADOR")) {
+//				consulta += "IDPESQUISADOR = " + vacina.getPesquisadorResponsavel().getIdPessoa()  + " AND";
+//			}
+			
+			if (filtros.contains("DATA_INICIO")) {
+				consulta += "inicio_pesquisa >= '" + vacina.getDataInicioPesquisa() + "' AND ";
+			}
+			
+			if (filtros.contains("DATA_LIMITE")) {
+				consulta += "inicio_pesquisa <= '" + vacina.getDataLimite() + "' AND ";
+			}
+		}
+
+		
+		return consulta.substring(0, consulta.length() - 4);
+	}
+
 	private PreparedStatement prepararStatementCadastro(PreparedStatement stmt, Vacina vacina) throws SQLException {
 		
 		stmt.setString(1 , vacina.getNome());

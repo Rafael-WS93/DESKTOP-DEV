@@ -383,8 +383,8 @@ public class TelaCadastroVacina {
 		
 		EstagioVacina[] estagios = {EstagioVacina.INICIAL ,EstagioVacina.TESTE ,EstagioVacina.APLICACAO_EM_MASSA};
 		
-		novaVacina.setNome(txtNomeVacina.getText());
-		novaVacina.setNomePaisOrigem(txtPaisVacina.getText());
+		novaVacina.setNome(txtNomeVacina.getText().trim());
+		novaVacina.setNomePaisOrigem(txtPaisVacina.getText().trim());
 		novaVacina.setPesquisadorResponsavel(vacina.getPesquisadorResponsavel());
 
 		

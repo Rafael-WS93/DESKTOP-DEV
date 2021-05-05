@@ -8,6 +8,7 @@ import br.sc.senac.exception.PessoaNaoPesquisador;
 import br.sc.senac.model.BO.AplicacaoVacinaBO;
 import br.sc.senac.model.BO.PessoaBO;
 import br.sc.senac.model.BO.VacinaBO;
+import br.sc.senac.model.seletor.SeletorVacina;
 import br.sc.senac.model.vo.CategoriaPessoa;
 import br.sc.senac.model.vo.Pessoa;
 import br.sc.senac.model.vo.Vacina;
@@ -83,6 +84,13 @@ public class VacinaController {
 	public Object atualizarvacinaController(Vacina vacinaAtualizar) throws CampoInvalidoVacina {
 		VacinaBO vacinaBO = new VacinaBO();
 		return vacinaBO.atualizarVacinaBO(vacinaAtualizar);
+	}
+	
+	// TODO ORGANIZAR OVERFLOW
+	public List<Vacina> consultarTodasVacinas(SeletorVacina pesquisa) {
+		VacinaBO vacinaBO = new VacinaBO();
+		
+		return vacinaBO.consultarTodasVacinasBO(pesquisa);
 	}
 
 
