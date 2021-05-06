@@ -148,9 +148,9 @@ public class VacinaDAO_seletor {
 		String query = QUERY_LISTA;
 		String filtros = vacina.filtro();
 		
-		if (!filtros.isEmpty()) {
-			query += pesquisarComFiltro(vacina, filtros);
-		} 
+
+		query += pesquisarComFiltro(vacina, filtros);
+
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
@@ -180,38 +180,45 @@ public class VacinaDAO_seletor {
 	}
 	
 	private String pesquisarComFiltro(SeletorVacina vacina, String filtros) {
-		String consulta = "WHERE ";
+		String consulta = "";
+		String and = " AND ";
 		
-		if (filtros.contains("ID") && filtros.length() == 1) {
-			consulta += "ID = " + vacina.getIdVacina() + " AND ";
-		} else {
-			if (filtros.contains("NOME")) {
-				consulta += "NOME = '" + vacina.getNome()	 + "' AND ";
+		if (!filtros.isEmpty()) {
+			consulta = "WHERE ";
+			
+			if (filtros.contains("ID") && filtros.length() == 1) {
+				consulta += "ID = " + vacina.getIdVacina() + and;
+			} else {
+				if (filtros.contains("NOME")) {
+					consulta += "NOME = '" + vacina.getNome()	 + "'" + and;
+				}
+				
+				if (filtros.contains("PAIS")) {
+					consulta += "nome_pais_origem = '" + vacina.getNomePaisOrigem() + "'" + and;
+				}
+				
+				if (filtros.contains("ESTAGIO")) {
+					consulta += "ESTAGIO = '" + vacina.getEstagioVacina().toString() + "'" + and;
+				}
+				
+				// TODO CONSULTA PESQUISADOR
+//				if (filtros.contains("PESQUISADOR")) {
+//					consulta += "IDPESQUISADOR = " + vacina.getPesquisadorResponsavel().getIdPessoa()  + and;
+//				}
+				
+				if (filtros.contains("DATA_INICIO")) {
+					consulta += "inicio_pesquisa >= '" + vacina.getDataInicioPesquisa() + "'" + and;
+				}
+				
+				if (filtros.contains("DATA_LIMITE")) {
+					consulta += "inicio_pesquisa <= '" + vacina.getDataLimite() + "'" + and;
+				}
 			}
 			
-			if (filtros.contains("PAIS")) {
-				consulta += "nome_pais_origem = '" + vacina.getNomePaisOrigem() + "' AND ";
-			}
 			
-			if (filtros.contains("ESTAGIO")) {
-				consulta += "ESTAGIO = '" + vacina.getEstagioVacina().toString() + "' AND ";
-			}
-			
-			// TODO CONSULTA PESQUISADOR
-//			if (filtros.contains("PESQUISADOR")) {
-//				consulta += "IDPESQUISADOR = " + vacina.getPesquisadorResponsavel().getIdPessoa()  + " AND";
-//			}
-			
-			if (filtros.contains("DATA_INICIO")) {
-				consulta += "inicio_pesquisa >= '" + vacina.getDataInicioPesquisa() + "' AND ";
-			}
-			
-			if (filtros.contains("DATA_LIMITE")) {
-				consulta += "inicio_pesquisa <= '" + vacina.getDataLimite() + "' AND ";
-			}
 		}
-		
-		consulta += "LIMIT " + vacina.getLimiteOffset() + "," + 10;
+	
+		consulta += "LIMIT " + vacina.getLimiteOffset() + "," + 10 + "    ";
 
 		
 		return consulta.substring(0, consulta.length() - 4);

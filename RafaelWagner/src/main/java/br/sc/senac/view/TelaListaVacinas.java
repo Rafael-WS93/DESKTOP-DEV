@@ -46,7 +46,7 @@ public class TelaListaVacinas {
 	
 	private List<Vacina> vacinas;
 	private Vacina vacina;
-	private SeletorVacina pesquisa;
+	private SeletorVacina pesquisa = new SeletorVacina();
 	private int paginaLista = 1;
 	
 	private JLabel lblNomeSelecionado;
@@ -385,10 +385,12 @@ public class TelaListaVacinas {
 		btnVoltar = new JButton("<< voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
 				setPaginaLista(getPaginaLista() -1);
-				atualizarTabelaVacinas(pesquisa, paginaLista - 1);
+				if (getPaginaLista() == 1) {
+					btnVoltar.setEnabled(false);
+				}
+			
+				atualizarTabelaVacinas(pesquisa, paginaLista);
 			}
 		});
 		btnVoltar.setEnabled(false);
@@ -401,7 +403,7 @@ public class TelaListaVacinas {
 				
 				setPaginaLista(getPaginaLista() + 1);
 				
-				atualizarTabelaVacinas(pesquisa, paginaLista - 1);
+				atualizarTabelaVacinas(pesquisa, paginaLista);
 			}
 
 
@@ -424,26 +426,12 @@ public class TelaListaVacinas {
 	private void atualizarTabelaVacinas() {
 		VacinaController vacinaController = new VacinaController();
 		
-		vacinas = vacinaController.consultarTodasVacinas();
+		vacinas = vacinaController.consultarTodasVacinas(pesquisa);
 		
-		this.limparTabelaVacinas();
-
-		DefaultTableModel model = (DefaultTableModel) this.tableVacinas.getModel();
-		
-		for(Vacina vac: vacinas) {
-			Object[] novaLinhaTabela = new Object[5];
-			
-			novaLinhaTabela[0] = vac.getNome();
-			novaLinhaTabela[1] = vac.getNomePaisOrigem();
-			novaLinhaTabela[2] = vac.getPesquisadorResponsavel().getNome();
-			novaLinhaTabela[3] = vac.getEstagioVacina().toString().replace("_", " ");
-			novaLinhaTabela[4] = vac.getDataInicioPesquisa().format(formatadorData);
-			
-			model.addRow(novaLinhaTabela);
-		}
+		listaParaTabela(vacinas);
 		
 		
-		if (vacinas.size() > 10) {
+		if (vacinas.size() > 2) {
 			btnAvancar.setEnabled(true);
 		}
 		
@@ -458,10 +446,44 @@ public class TelaListaVacinas {
 		
 		vacinas = vacinaController.consultarTodasVacinas(pesquisa);
 		
+		listaParaTabela(vacinas);
+		
+		if (vacinas.size() > 10) {
+			btnAvancar.setEnabled(true);
+		}
+		
+		setPaginaLista(1);
+		
+	}
+	
+	// TODO organizar OVERFLOW
+	private void atualizarTabelaVacinas(SeletorVacina pesquisa, int paginaLista) {
+		
+		pesquisa.setPagina(paginaLista -1);
+		
+//		if (paginaLista > 1) {
+//
+//		} else {
+//			
+//		}
+		
+		VacinaController vacinaController = new VacinaController();
+		
+		vacinas = vacinaController.consultarTodasVacinas(pesquisa);
+		
+		listaParaTabela(vacinas);
+		
+		
+		
+		
+	}
+	
+	private void listaParaTabela(List<Vacina> vacinas) {
+		
 		this.limparTabelaVacinas();
 
 		DefaultTableModel model = (DefaultTableModel) this.tableVacinas.getModel();
-		
+		 
 		
 		for(Vacina vac: vacinas) {
 			Object[] novaLinhaTabela = new Object[5];
@@ -479,14 +501,9 @@ public class TelaListaVacinas {
 			btnAvancar.setEnabled(true);
 		}
 		
-		setPaginaLista(1);
-		
-	}
-	
-	// TODO organizar OVERFLOW
-	private void atualizarTabelaVacinas(SeletorVacina pesquisa, int paginaLista) {
-		
-		
+		if (paginaLista > 1) {
+			btnVoltar.setEnabled(true);
+		}
 		
 	}
 	
